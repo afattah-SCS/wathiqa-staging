@@ -3,24 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Wathiqa — Landing Page Mockup (Option A: Dark Animated Hero)</title>
+  <title>Wathiqa â Landing Page Mockup (Option A: Dark Animated Hero)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <style>
-    /* ── DESIGN TOKENS ─────────────────────────── */
+    /* ââ DESIGN TOKENS âââââââââââââââââââââââââââ */
     :root {
       --orange:       #E07A2F;
       --orange-dark:  #C05A0E;
       --orange-glow:  rgba(224,122,47,0.18);
       --orange-pale:  rgba(224,122,47,0.08);
-      --dark-bg:      #FFFFFF;
-      --dark-card:    #FFFFFF;
+      --cream-bg:     #FFF9F2;
+      --cream-deep:   #FFF3E8;
       --dark-border:  rgba(0,0,0,0.08);
       --dark-text:    #555555;
-      --sidebar:      #F5F5F5;
-      --light-bg:     #F9F7F5;
-      --light-card:   #FFFFFF;
+      --sidebar:      #FFF5ED;
+      --light-bg:     #FFF3E8;
+      --cream-card:   #FFFBF5;
       --text-primary: #111111;
       --text-secondary:#555555;
       --radius:       10px;
@@ -29,9 +29,9 @@
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', system-ui, sans-serif; background: var(--dark-bg); color: #293040; overflow-x: hidden; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: var(--cream-bg); color: #293040; overflow-x: hidden; }
 
-    /* ── UTILITY ────────────────────────────────── */
+    /* ââ UTILITY ââââââââââââââââââââââââââââââââââ */
     .container { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
     .tag { display: inline-flex; align-items: center; gap: 6px; background: var(--orange-pale); border: 1px solid rgba(224,122,47,0.3); color: var(--orange); border-radius: 100px; padding: 5px 14px; font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
     .btn-primary {
@@ -55,14 +55,14 @@
     .fade-up { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
     .fade-up.visible { opacity: 1; transform: none; }
 
-    /* ── NAVIGATION ─────────────────────────────── */
+    /* ââ NAVIGATION âââââââââââââââââââââââââââââââ */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       padding: 16px 0;
       transition: background 0.3s, backdrop-filter 0.3s, border-bottom 0.3s;
     }
     nav.scrolled {
-      background: rgba(252,252,252,0.95);
+      background: rgba(255,249,242,0.95);
       backdrop-filter: blur(20px);
       border-bottom: 1px solid rgba(0,0,0,0.1);
     }
@@ -81,7 +81,7 @@
     .nav-cta { display: flex; align-items: center; gap: 10px; }
     .btn-nav { padding: 9px 20px; font-size: 14px; }
 
-    /* ── HERO ───────────────────────────────────── */
+    /* ââ HERO âââââââââââââââââââââââââââââââââââââ */
     #hero {
       min-height: 100vh; position: relative; display: flex; align-items: center;
       overflow: hidden; padding: 120px 0 80px;
@@ -92,7 +92,7 @@
     .hero-overlay {
       position: absolute; inset: 0; z-index: 1;
       background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(224,122,47,0.12) 0%, transparent 70%),
-                  linear-gradient(180deg, transparent 60%, var(--dark-bg) 100%);
+                  linear-gradient(180deg, transparent 60%, var(--cream-bg) 100%);
     }
     .hero-inner {
       position: relative; z-index: 2;
@@ -124,7 +124,7 @@
     /* dashboard preview */
     .hero-visual { position: relative; }
     .dashboard-preview {
-      background: var(--dark-card); border: 1px solid var(--dark-border);
+      background: var(--cream-bg); border: 1px solid var(--dark-border);
       border-radius: var(--radius-xl); padding: 0; overflow: hidden;
       box-shadow: 0 20px 40px rgba(0,0,0,0.12), 0 0 0 1px var(--dark-border);
       transform: perspective(800px) rotateY(-4deg) rotateX(2deg);
@@ -132,7 +132,7 @@
     }
     .dashboard-preview:hover { transform: perspective(800px) rotateY(-1deg) rotateX(0deg); }
     .dash-topbar {
-      background: #F5F5F5; padding: 12px 16px;
+      background: #FFF5ED; padding: 12px 16px;
       display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(0,0,0,0.08);
     }
     .dash-dots { display: flex; gap: 6px; }
@@ -140,9 +140,9 @@
     .dash-dots span:nth-child(1) { background: #FF5F57; }
     .dash-dots span:nth-child(2) { background: #FEBC2E; }
     .dash-dots span:nth-child(3) { background: #28C840; }
-    .dash-url { background: #F5F5F5; border-radius: 6px; padding: 4px 12px; font-size: 11px; color: #999999; flex: 1; }
+    .dash-url { background: #FFF5ED; border-radius: 6px; padding: 4px 12px; font-size: 11px; color: #999999; flex: 1; }
     .dash-body { display: grid; grid-template-columns: 180px 1fr; min-height: 320px; }
-    .dash-sidebar { background: #F5F5F5; padding: 16px 12px; border-right: 1px solid rgba(0,0,0,0.08); }
+    .dash-sidebar { background: #FFF5ED; padding: 16px 12px; border-right: 1px solid rgba(0,0,0,0.08); }
     .dash-sidebar-logo { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; padding: 0 4px; }
     .dash-sidebar-logo-mark { width: 24px; height: 24px; background: var(--orange); border-radius: 5px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 10px; }
     .dash-sidebar-logo-text { font-size: 13px; font-weight: 700; }
@@ -154,11 +154,11 @@
     .dash-title { font-size: 13px; font-weight: 700; color: #111111; }
     .dash-btn { background: var(--orange); color: #fff; padding: 5px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; border: none; cursor: pointer; }
     .dash-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
-    .dash-stat-card { background: #FAFAFA; border: 1px solid rgba(0,0,0,0.06); border-radius: 8px; padding: 10px; }
+    .dash-stat-card { background: var(--cream-card); border: 1px solid rgba(0,0,0,0.06); border-radius: 8px; padding: 10px; }
     .dash-stat-val { font-size: 20px; font-weight: 800; color: #111111; }
     .dash-stat-label { font-size: 10px; color: #999999; margin-top: 2px; }
     .dash-policy-list { display: flex; flex-direction: column; gap: 6px; }
-    .dash-policy-row { display: flex; align-items: center; gap: 8px; background: #FAFAFA; border: 1px solid rgba(0,0,0,0.06); border-radius: 7px; padding: 8px 10px; }
+    .dash-policy-row { display: flex; align-items: center; gap: 8px; background: var(--cream-card); border: 1px solid rgba(0,0,0,0.06); border-radius: 7px; padding: 8px 10px; }
     .dash-policy-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
     .dash-policy-name { font-size: 11px; font-weight: 500; flex: 1; color: #333333; }
     .dash-policy-badge { font-size: 10px; padding: 2px 8px; border-radius: 100px; font-weight: 600; }
@@ -183,35 +183,35 @@
     .float-bar-fill { height: 100%; background: var(--orange); border-radius: 100px; animation: barPulse 2s ease-in-out infinite; }
     @keyframes barPulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
 
-    /* ── LOGOS STRIP ─────────────────────────────── */
+    /* ââ LOGOS STRIP âââââââââââââââââââââââââââââââ */
     #logos { padding: 48px 0; border-top: 1px solid rgba(0,0,0,0.08); border-bottom: 1px solid rgba(0,0,0,0.08); }
     .logos-label { text-align: center; font-size: 12px; color: #666666; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 500; margin-bottom: 28px; }
     .logos-row { display: flex; align-items: center; justify-content: center; gap: 48px; flex-wrap: wrap; }
     .logo-pill {
-      background: #F9F9F9; border: 1px solid rgba(0,0,0,0.08);
+      background: var(--cream-card); border: 1px solid rgba(0,0,0,0.08);
       border-radius: 8px; padding: 10px 20px; font-size: 13px; font-weight: 600;
       color: #888888; letter-spacing: 0.03em;
       transition: all 0.2s;
     }
-    .logo-pill:hover { background: #F0F0F0; color: #555555; }
+    .logo-pill:hover { background: #FFECD8; color: #555555; }
 
-    /* ── STATS ───────────────────────────────────── */
+    /* ââ STATS âââââââââââââââââââââââââââââââââââââ */
     #stats { padding: 80px 0; background: #FFFFFF; }
     .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
     .stat-box {
       text-align: center; padding: 40px 24px;
-      background: #FAFAFA; border: 1px solid rgba(0,0,0,0.06); border-radius: 0;
+      background: var(--cream-card); border: 1px solid rgba(0,0,0,0.06); border-radius: 0;
       transition: background 0.2s;
     }
     .stat-box:first-child { border-radius: var(--radius) 0 0 var(--radius); }
     .stat-box:last-child  { border-radius: 0 var(--radius) var(--radius) 0; }
-    .stat-box:hover { background: #F5F5F5; }
+    .stat-box:hover { background: #FFF5ED; }
     .stat-num { font-size: clamp(36px, 5vw, 52px); font-weight: 900; color: var(--orange); letter-spacing: -0.03em; line-height: 1; }
     .stat-unit { font-size: 20px; color: var(--orange); font-weight: 700; }
     .stat-desc { font-size: 14px; color: var(--dark-text); margin-top: 8px; line-height: 1.5; }
 
-    /* ── HOW IT WORKS ────────────────────────────── */
-    #how { padding: 100px 0; background: var(--dark-bg); }
+    /* ââ HOW IT WORKS ââââââââââââââââââââââââââââââ */
+    #how { padding: 100px 0; background: var(--cream-bg); }
     .section-head { text-align: center; margin-bottom: 64px; }
     .section-head h2 { font-size: clamp(28px, 4vw, 42px); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 16px; }
     .section-head p { font-size: 17px; color: var(--dark-text); max-width: 520px; margin: 0 auto; line-height: 1.7; }
@@ -222,11 +222,11 @@
       z-index: 1;
     }
     .step-card {
-      background: #FAFAFA; border: 1px solid rgba(0,0,0,0.06);
+      background: var(--cream-card); border: 1px solid rgba(0,0,0,0.06);
       border-radius: var(--radius-lg); padding: 36px 28px; text-align: center;
       transition: background 0.25s, border-color 0.25s, transform 0.25s;
     }
-    .step-card:hover { background: #F5F5F5; border-color: rgba(224,122,47,0.25); transform: translateY(-4px); }
+    .step-card:hover { background: #FFF5ED; border-color: rgba(224,122,47,0.25); transform: translateY(-4px); }
     .step-num {
       width: 56px; height: 56px; border-radius: 50%; border: 2px solid var(--orange);
       display: flex; align-items: center; justify-content: center;
@@ -236,11 +236,11 @@
     .step-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
     .step-card p { font-size: 14px; color: var(--dark-text); line-height: 1.65; }
 
-    /* ── POLICY TYPES ────────────────────────────── */
+    /* ââ POLICY TYPES ââââââââââââââââââââââââââââââ */
     #policies { padding: 100px 0; }
     .policy-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
     .policy-card {
-      background: #FAFAFA; border: 1px solid rgba(0,0,0,0.06);
+      background: var(--cream-card); border: 1px solid rgba(0,0,0,0.06);
       border-radius: var(--radius-lg); padding: 28px 24px;
       cursor: pointer; transition: all 0.25s;
       position: relative; overflow: hidden;
@@ -261,14 +261,14 @@
     .policy-card p { font-size: 12px; color: var(--dark-text); line-height: 1.5; }
     .policy-card .policy-badge { margin-top: 12px; display: inline-block; font-size: 10px; font-weight: 700; color: var(--orange); background: var(--orange-pale); padding: 3px 8px; border-radius: 100px; }
 
-    /* ── TRANSITION TO LIGHT ─────────────────────── */
+    /* ââ TRANSITION TO LIGHT âââââââââââââââââââââââ */
     .section-divider {
       height: 120px;
-      background: linear-gradient(180deg, var(--dark-bg), var(--light-bg));
+      background: linear-gradient(180deg, var(--cream-bg), var(--light-bg));
     }
     .light-section { background: var(--light-bg); color: var(--text-primary); }
 
-    /* ── PRICING ─────────────────────────────────── */
+    /* ââ PRICING âââââââââââââââââââââââââââââââââââ */
     #pricing { padding: 100px 0; background: var(--light-bg); }
     #pricing h2 { font-size: clamp(28px, 4vw, 42px); font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em; margin-bottom: 16px; }
     #pricing .section-head p { color: var(--text-secondary); }
@@ -303,7 +303,7 @@
     .pricing-desc { font-size: 13px; color: var(--text-secondary); margin: 12px 0 20px; line-height: 1.5; }
     .pricing-features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
     .pricing-features li { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--text-primary); }
-    .pricing-features li::before { content: '✓'; color: var(--orange); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .pricing-features li::before { content: 'â'; color: var(--orange); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
     .pricing-cta {
       width: 100%; padding: 12px; border-radius: var(--radius); font-size: 14px; font-weight: 600;
       cursor: pointer; transition: all 0.2s; border: none;
@@ -313,7 +313,7 @@
     .pricing-cta.filled { background: var(--orange); color: #fff; box-shadow: 0 4px 16px var(--orange-glow); }
     .pricing-cta.filled:hover { background: var(--orange-dark); }
 
-    /* ── TESTIMONIALS ────────────────────────────── */
+    /* ââ TESTIMONIALS ââââââââââââââââââââââââââââââ */
     #testimonials { padding: 100px 0; background: var(--light-bg); }
     #testimonials h2 { font-size: clamp(28px, 4vw, 42px); font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em; margin-bottom: 48px; }
     .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
@@ -329,8 +329,8 @@
     .testi-name { font-size: 14px; font-weight: 700; color: var(--text-primary); }
     .testi-role { font-size: 12px; color: var(--text-secondary); }
 
-    /* ── FINAL CTA ───────────────────────────────── */
-    #final-cta { padding: 100px 0; background: var(--dark-bg); position: relative; overflow: hidden; }
+    /* ââ FINAL CTA âââââââââââââââââââââââââââââââââ */
+    #final-cta { padding: 100px 0; background: var(--cream-bg); position: relative; overflow: hidden; }
     .final-cta-glow {
       position: absolute; width: 500px; height: 500px; border-radius: 50%;
       background: radial-gradient(circle, rgba(224,122,47,0.15) 0%, transparent 70%);
@@ -343,19 +343,19 @@
     .final-ctas { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
     .final-note { margin-top: 20px; font-size: 13px; color: #999999; }
 
-    /* ── FOOTER ──────────────────────────────────── */
-    footer { background: #2E2E2E; padding: 60px 0 32px; border-top: 1px solid rgba(255,255,255,0.1); }
+    /* ââ FOOTER ââââââââââââââââââââââââââââââââââââ */
+    footer { background: var(--cream-deep); padding: 60px 0 32px; border-top: 1px solid rgba(224,122,47,0.15); }
     .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
-    .footer-brand p { font-size: 14px; color: var(--dark-text); line-height: 1.7; margin-top: 12px; max-width: 260px; }
-    .footer-col h4 { font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 16px; }
-    .footer-col a { display: block; color: rgba(255,255,255,0.65); text-decoration: none; font-size: 14px; margin-bottom: 10px; transition: color 0.2s; }
-    .footer-col a:hover { color: #fff; }
-    .footer-bottom { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; }
-    .footer-copy { font-size: 13px; color: rgba(255,255,255,0.5); }
+    .footer-brand p { font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-top: 12px; max-width: 260px; }
+    .footer-col h4 { font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--orange); margin-bottom: 16px; }
+    .footer-col a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 14px; margin-bottom: 10px; transition: color 0.2s; }
+    .footer-col a:hover { color: var(--text-primary); }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(224,122,47,0.15); padding-top: 24px; }
+    .footer-copy { font-size: 13px; color: var(--text-secondary); }
     .footer-badges { display: flex; gap: 10px; }
-    .footer-badge { font-size: 11px; color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 6px; padding: 5px 10px; }
+    .footer-badge { font-size: 11px; color: var(--orange-dark); background: var(--orange-pale); border: 1px solid rgba(224,122,47,0.2); border-radius: 6px; padding: 5px 10px; }
 
-    /* ── RESPONSIVE ──────────────────────────────── */
+    /* ââ RESPONSIVE ââââââââââââââââââââââââââââââââ */
     @media (max-width: 900px) {
       .hero-inner { grid-template-columns: 1fr; }
       .hero-visual { display: none; }
@@ -373,7 +373,7 @@
       .footer-top { grid-template-columns: 1fr; }
     }
 
-    /* ── DESIGN NOTE BADGE ───────────────────────── */
+    /* ââ DESIGN NOTE BADGE âââââââââââââââââââââââââ */
     .design-note {
       position: fixed; bottom: 20px; right: 20px; z-index: 999;
       background: rgba(14,14,14,0.95); backdrop-filter: blur(20px);
@@ -388,8 +388,8 @@
 
 <!-- Design note -->
 <div class="design-note">
-  <strong>🎨 Noor — Design Mockup: Option A</strong>
-  Dark animated hero • Brand orange #E07A2F • Vercel/Cursor-style aesthetic • Interactive HTML prototype
+  <strong>ð¨ Noor â Design Mockup: Option A</strong>
+  Dark animated hero â¢ Brand orange #E07A2F â¢ Vercel/Cursor-style aesthetic â¢ Interactive HTML prototype
 </div>
 
 <!-- NAV -->
@@ -409,7 +409,7 @@
       </div>
       <div class="nav-cta">
         <a href="#" class="btn-ghost btn-nav">Sign in</a>
-        <a href="#" class="btn-primary btn-nav">Start free →</a>
+        <a href="#" class="btn-primary btn-nav">Start free â</a>
       </div>
     </div>
   </div>
@@ -424,7 +424,7 @@
       <!-- Left -->
       <div class="hero-left">
         <div class="hero-badge">
-          <span class="tag">✦ AI-Powered Policy Generation</span>
+          <span class="tag">â¦ AI-Powered Policy Generation</span>
         </div>
         <h1 class="hero-h1">
           Gender equality policies.<br />
@@ -432,10 +432,10 @@
           Ready to deploy.
         </h1>
         <p class="hero-sub">
-          Wathiqa generates enterprise-grade gender equality policy suites for organizations — available in 6 languages, jurisdiction-aware, compliance-ready. Powered by Claude AI.
+          Wathiqa generates enterprise-grade gender equality policy suites for organizations â available in 6 languages, jurisdiction-aware, compliance-ready. Powered by Claude AI.
         </p>
         <div class="hero-ctas">
-          <a href="#" class="btn-primary">Generate your policies free →</a>
+          <a href="#" class="btn-primary">Generate your policies free â</a>
           <a href="#how" class="btn-ghost">See how it works</a>
         </div>
         <div class="hero-trust">
@@ -450,7 +450,7 @@
         <div class="float-card float-card-1">
           <div class="float-label">Policies generated</div>
           <div class="float-val">500+</div>
-          <div class="float-sub">↑ 18% this month</div>
+          <div class="float-sub">â 18% this month</div>
         </div>
         <div class="dashboard-preview">
           <div class="dash-topbar">
@@ -481,7 +481,7 @@
               </div>
               <div class="dash-policy-list">
                 <div class="dash-policy-row"><div class="dash-policy-dot" style="background:#10B981"></div><div class="dash-policy-name">Anti-Harassment Policy (EN)</div><span class="dash-policy-badge badge-done">Done</span></div>
-                <div class="dash-policy-row"><div class="dash-policy-dot" style="background:var(--orange)"></div><div class="dash-policy-name">Equal Pay Framework (AR)</div><span class="dash-policy-badge badge-gen">Generating…</span></div>
+                <div class="dash-policy-row"><div class="dash-policy-dot" style="background:var(--orange)"></div><div class="dash-policy-name">Equal Pay Framework (AR)</div><span class="dash-policy-badge badge-gen">Generatingâ¦</span></div>
                 <div class="dash-policy-row"><div class="dash-policy-dot" style="background:#6B7280"></div><div class="dash-policy-name">Parental Leave Policy</div><span class="dash-policy-badge badge-draft">Draft</span></div>
               </div>
             </div>
@@ -490,10 +490,10 @@
         <div class="float-card float-card-2">
           <div class="float-label">Generation progress</div>
           <div class="float-progress">
-            <div class="float-progress-label"><span>Drafting policy…</span><span>73%</span></div>
+            <div class="float-progress-label"><span>Drafting policyâ¦</span><span>73%</span></div>
             <div class="float-bar"><div class="float-bar-fill" style="width:73%"></div></div>
           </div>
-          <div class="float-sub" style="margin-top:6px;">≈ 45 sec remaining</div>
+          <div class="float-sub" style="margin-top:6px;">â 45 sec remaining</div>
         </div>
       </div>
     </div>
@@ -544,12 +544,12 @@
       <div class="step-card">
         <div class="step-num">2</div>
         <h3>AI generates your policy suite</h3>
-        <p>Our Claude-powered pipeline drafts, reviews, and localizes your policies — in 6 languages — with jurisdiction-specific compliance built in.</p>
+        <p>Our Claude-powered pipeline drafts, reviews, and localizes your policies â in 6 languages â with jurisdiction-specific compliance built in.</p>
       </div>
       <div class="step-card">
         <div class="step-num">3</div>
         <h3>Download, customize &amp; deploy</h3>
-        <p>Get production-ready .docx files instantly. Edit in your browser, track versions, and share with your team — all from your dashboard.</p>
+        <p>Get production-ready .docx files instantly. Edit in your browser, track versions, and share with your team â all from your dashboard.</p>
       </div>
     </div>
   </div>
@@ -561,53 +561,53 @@
     <div class="section-head fade-up">
       <div class="section-label">Policy library</div>
       <h2>Every policy your organization needs</h2>
-      <p>From essential anti-harassment frameworks to advanced pay equity systems — all available as AI-generated documents in 6 languages.</p>
+      <p>From essential anti-harassment frameworks to advanced pay equity systems â all available as AI-generated documents in 6 languages.</p>
     </div>
     <div class="policy-grid fade-up">
       <div class="policy-card">
-        <div class="policy-icon">⚖️</div>
+        <div class="policy-icon">âï¸</div>
         <h3>Anti-Sexual Harassment</h3>
         <p>Comprehensive prevention, reporting, and response framework.</p>
         <span class="policy-badge">Essential</span>
       </div>
       <div class="policy-card">
-        <div class="policy-icon">💰</div>
+        <div class="policy-icon">ð°</div>
         <h3>Equal Pay & Compensation</h3>
         <p>Pay equity analysis, transparent salary bands, gap remediation.</p>
         <span class="policy-badge">Essential</span>
       </div>
       <div class="policy-card">
-        <div class="policy-icon">👶</div>
+        <div class="policy-icon">ð¶</div>
         <h3>Parental Leave</h3>
-        <p>Inclusive leave for all parents — maternity, paternity, adoption.</p>
+        <p>Inclusive leave for all parents â maternity, paternity, adoption.</p>
         <span class="policy-badge">Essential</span>
       </div>
       <div class="policy-card">
-        <div class="policy-icon">📈</div>
+        <div class="policy-icon">ð</div>
         <h3>Non-Discrimination</h3>
         <p>Promotion pathways, mentoring structures, representation targets.</p>
         <span class="policy-badge">Priority A</span>
       </div>
       <div class="policy-card">
-        <div class="policy-icon">🛡️</div>
+        <div class="policy-icon">ð¡ï¸</div>
         <h3>Workplace Safety</h3>
         <p>Gender-based violence prevention in workplace and field environments.</p>
         <span class="policy-badge">Priority A</span>
       </div>
       <div class="policy-card">
-        <div class="policy-icon">🌍</div>
+        <div class="policy-icon">ð</div>
         <h3>Retaliation Prevention</h3>
         <p>Bias-free hiring, diverse shortlists, structured interview processes.</p>
         <span class="policy-badge">Priority A</span>
       </div>
       <div class="policy-card">
-        <div class="policy-icon">🧠</div>
+        <div class="policy-icon">ð§ </div>
         <h3>Whistleblower Protection</h3>
         <p>Training requirements, decision audit frameworks, culture change roadmap.</p>
         <span class="policy-badge">Priority B</span>
       </div>
       <div class="policy-card">
-        <div class="policy-icon">📋</div>
+        <div class="policy-icon">ð</div>
         <h3>+ 52 More Policies</h3>
         <p>Including governance, ESG reporting, flexible work, and sector-specific frameworks.</p>
         <span class="policy-badge">All categories</span>
@@ -656,7 +656,7 @@
           <li>Download .docx files</li>
           <li>Email support</li>
         </ul>
-        <button class="pricing-cta filled">Start with Starter →</button>
+        <button class="pricing-cta filled">Start with Starter â</button>
       </div>
       <div class="pricing-card">
         <div class="pricing-tier">Growth</div>
@@ -697,23 +697,23 @@
     </div>
     <div class="testimonials-grid fade-up">
       <div class="testi-card">
-        <div class="testi-stars">★★★★★</div>
+        <div class="testi-stars">âââââ</div>
         <p class="testi-quote">"Wathiqa generated a complete anti-harassment policy suite in both Arabic and English in under 10 minutes. What would have taken our legal team weeks was done before our morning coffee."</p>
         <div class="testi-author">
           <div class="testi-avatar" style="background:#1B3A5C;">S</div>
-          <div><div class="testi-name">Sara Al-Mansouri</div><div class="testi-role">HR Director, Manufacturing Co. — Dubai</div></div>
+          <div><div class="testi-name">Sara Al-Mansouri</div><div class="testi-role">HR Director, Manufacturing Co. â Dubai</div></div>
         </div>
       </div>
       <div class="testi-card">
-        <div class="testi-stars">★★★★★</div>
+        <div class="testi-stars">âââââ</div>
         <p class="testi-quote">"The quality of the generated policies surprised me. They reference the right ILO frameworks, include jurisdiction-specific clauses, and the Arabic translation is professional-grade."</p>
         <div class="testi-author">
           <div class="testi-avatar" style="background:#10B981;">M</div>
-          <div><div class="testi-name">Mona Ibrahim</div><div class="testi-role">DEI Program Lead, NGO — Cairo</div></div>
+          <div><div class="testi-name">Mona Ibrahim</div><div class="testi-role">DEI Program Lead, NGO â Cairo</div></div>
         </div>
       </div>
       <div class="testi-card">
-        <div class="testi-stars">★★★★★</div>
+        <div class="testi-stars">âââââ</div>
         <p class="testi-quote">"We needed GBV prevention and equal pay policies for an EU-funded project. Wathiqa delivered everything compliant with EU standards. Exceptional tool for our sector."</p>
         <div class="testi-author">
           <div class="testi-avatar" style="background:var(--orange);">A</div>
@@ -729,14 +729,14 @@
   <div class="final-cta-glow"></div>
   <div class="container">
     <div class="final-cta-inner fade-up">
-      <span class="tag" style="margin-bottom:24px; display:inline-flex;">✦ Start today — no credit card needed</span>
+      <span class="tag" style="margin-bottom:24px; display:inline-flex;">â¦ Start today â no credit card needed</span>
       <h2>Your organization deserves<br />gender equality policies that work.</h2>
-      <p>Join 50+ organizations using Wathiqa to build inclusive, compliant workplaces — faster than ever before.</p>
+      <p>Join 50+ organizations using Wathiqa to build inclusive, compliant workplaces â faster than ever before.</p>
       <div class="final-ctas">
-        <a href="#" class="btn-primary" style="font-size:16px; padding:15px 32px;">Generate your policies free →</a>
+        <a href="#" class="btn-primary" style="font-size:16px; padding:15px 32px;">Generate your policies free â</a>
         <a href="#" class="btn-ghost" style="font-size:16px; padding:15px 28px;">Book a demo</a>
       </div>
-      <p class="final-note">Free plan includes 1 free credit • No credit card • No expiry</p>
+      <p class="final-note">Free plan includes 1 free credit â¢ No credit card â¢ No expiry</p>
     </div>
   </div>
 </section>
@@ -775,7 +775,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <div class="footer-copy">© 2026 Wathiqa. Generated with AI assistance by Wathiqa.</div>
+      <div class="footer-copy">Â© 2026 Wathiqa. Generated with AI assistance by Wathiqa.</div>
       <div class="footer-badges">
         <span class="footer-badge">EU AI Act Compliant</span>
         <span class="footer-badge">GDPR Ready</span>
@@ -800,7 +800,7 @@
     scale: 1.0,
     scaleMobile: 1.0,
     color: 0xE07A2F,
-    backgroundColor: 0xF9F7F5,
+    backgroundColor: 0xFFF9F2,
     points: 9,
     maxDistance: 20,
     spacing: 18,

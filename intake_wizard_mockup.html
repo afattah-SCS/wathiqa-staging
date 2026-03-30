@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wathiqa — 7-Step Intake Wizard Mockup</title>
+<style>
+/* ============================================================
+   WATHIQA BRAND TOKENS
+   ============================================================ */
+:root {
+  --bg:           #FCFCFC;
+  --card:         #FFFFFF;
+  --text:         #293040;
+  --text-muted:   #737D8C;
+  --border:       #DEE2E8;
+  --muted:        #EFF1F3;
+  --orange:       #E07A2F;
+  --orange-dark:  #BF5A13;
+  --orange-light: #FFF3E0;
+  --radius:       10px;
+  --shadow-sm:    0 1px 3px rgba(41,48,64,0.08);
+  --shadow-md:    0 4px 16px rgba(41,48,64,0.12);
+  --shadow-lg:    0 12px 40px rgba(41,48,64,0.18);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ---- Top Navbar ---- */
+.wizard-nav {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  height: 60px;
+  display: flex; align-items: center; gap: 16px;
+}
+.wn-logo {
+  display: flex; align-items: center; gap: 9px;
+  text-decoration: none;
+}
+.wn-logo-mark {
+  width: 30px; height: 30px;
+  background: var(--orange); border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 15px; color: #fff; position: relative;
+}
+.wn-logo-mark::after {
+  content: ''; position: absolute; bottom: 0; right: 0;
+  width: 0; height: 0; border-style: solid;
+  border-width: 0 0 7px 7px;
+  border-color: transparent transparent rgba(0,0,0,0.2) transparent;
+}
+.wn-logo-text { font-size: 16px; font-weight: 700; color: var(--text); letter-spacing: -0.02em; }
+.wn-sep { color: var(--border); margin: 0 4px; }
+.wn-title { font-size: 14px; color: var(--text-muted); font-weight: 500; }
+.wn-spacer { flex: 1; }
+.wn-save { font-size: 12.5px; color: var(--text-muted); padding: 7px 14px; border: 1px solid var(--border); border-radius: 8px; background: none; cursor: pointer; }
+.wn-exit { font-size: 12.5px; color: var(--text-muted); padding: 7px 14px; border: none; background: none; cursor: pointer; }
+.wn-exit:hover { color: var(--text); }
+
+/* ---- Progress Header ---- */
+.progress-header {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 32px 0;
+}
+.ph-inner { max-width: 800px; margin: 0 auto; }
+.ph-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+.ph-step-count { font-size: 12.5px; font-weight: 600; color: var(--text-muted); }
+.ph-step-count strong { color: var(--orange); }
+.ph-title { font-size: 13px; font-weight: 600; color: var(--text); }
+.ph-save-indicator { font-size: 11px; color: #2E7D32; display: flex; align-items: center; gap: 5px; }
+
+/* Progress Steps */
+.progress-steps {
+  display: flex; align-items: flex-end; gap: 0;
+  position: relative; padding-bottom: 0;
+}
+.progress-step {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  cursor: pointer; position: relative;
+  padding-bottom: 14px;
+}
+.progress-step::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 3px; background: var(--border);
+  border-radius: 2px 2px 0 0;
+}
+.progress-step.done::after { background: var(--orange); }
+.progress-step.active::after { background: var(--orange); }
+
+.ps-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--card);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11.5px; font-weight: 700; color: var(--text-muted);
+  margin-bottom: 6px; transition: all 0.3s; flex-shrink: 0;
+}
+.progress-step.done .ps-num {
+  background: #E8F5E9; border-color: #4CAF50; color: #2E7D32; font-size: 13px;
+}
+.progress-step.active .ps-num {
+  background: var(--orange); border-color: var(--orange); color: #fff;
+  box-shadow: 0 0 0 4px rgba(224,122,47,0.15);
+}
+.ps-label {
+  font-size: 10.5px; font-weight: 600; color: var(--text-muted);
+  text-align: center; white-space: nowrap;
+  transition: color 0.3s;
+}
+.progress-step.active .ps-label { color: var(--orange); }
+.progress-step.done .ps-label { color: #4CAF50; }
+.ps-check { display: none; }
+.progress-step.done .ps-check { display: inline; }
+.progress-step.done .ps-numval { display: none; }
+
+/* ============================================================
+   MAIN LAYOUT
+   ============================================================ */
+.wizard-main {
+  display: flex; min-height: calc(100vh - 60px - 110px);
+}
+
+/* Sidebar Summary */
+.wizard-sidebar {
+  width: 260px; min-width: 260px;
+  background: var(--card);
+  border-right: 1px solid var(--border);
+  padding: 28px 20px;
+  position: sticky; top: 170px;
+  height: fit-content;
+}
+.ws-title { font-size: 11px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 16px; }
+.ws-item {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+}
+.ws-item:last-child { border-bottom: none; }
+.ws-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); flex-shrink: 0; margin-top: 4px; }
+.ws-item.done .ws-dot { background: #4CAF50; }
+.ws-item.active .ws-dot { background: var(--orange); }
+.ws-item-label { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+.ws-item.active .ws-item-label { color: var(--text); font-weight: 700; }
+.ws-item.done .ws-item-label { color: var(--text-muted); }
+.ws-item-value { font-size: 11px; color: var(--text-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ws-item.done .ws-item-value { color: var(--orange); font-weight: 500; }
+.ws-item-pending { font-size: 10.5px; color: var(--text-muted); opacity: 0.5; font-style: italic; }
+
+.ws-credit-box {
+  margin-top: 20px;
+  background: var(--orange-light);
+  border: 1px solid rgba(224,122,47,0.2);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+}
+.wsb-label { font-size: 11px; color: var(--orange-dark); font-weight: 600; margin-bottom: 4px; }
+.wsb-val { font-size: 22px; font-weight: 800; color: var(--orange); line-height: 1; }
+.wsb-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+/* Form Area */
+.wizard-form-area {
+  flex: 1; padding: 40px 48px;
+  max-width: 700px;
+}
+
+/* Step animation */
+.step-view { display: none; }
+.step-view.active {
+  display: block;
+  animation: slideIn 0.3s ease-out;
+}
+@keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+
+/* Step Header */
+.step-header { margin-bottom: 32px; }
+.step-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--orange-light); color: var(--orange-dark);
+  font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; padding: 4px 10px;
+  border-radius: 20px; margin-bottom: 12px;
+}
+.step-title { font-size: 24px; font-weight: 800; color: var(--text); margin-bottom: 8px; line-height: 1.2; }
+.step-desc { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+/* Form elements */
+.form-row { display: grid; gap: 16px; margin-bottom: 20px; }
+.form-row.cols2 { grid-template-columns: 1fr 1fr; }
+.form-row.cols3 { grid-template-columns: 1fr 1fr 1fr; }
+.form-group { display: flex; flex-direction: column; gap: 7px; }
+.form-label { font-size: 13px; font-weight: 600; color: var(--text); }
+.form-label .req { color: var(--orange); margin-left: 2px; }
+.form-hint { font-size: 11.5px; color: var(--text-muted); margin-top: 3px; }
+
+input[type="text"], input[type="email"], select, textarea {
+  padding: 11px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 14px; color: var(--text);
+  background: var(--card);
+  outline: none;
+  transition: all 0.2s;
+  font-family: inherit; width: 100%;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px rgba(224,122,47,0.1);
+}
+input::placeholder, textarea::placeholder { color: var(--text-muted); }
+textarea { resize: vertical; min-height: 80px; }
+
+/* Selection Grid */
+.selection-grid { display: grid; gap: 12px; }
+.selection-grid.cols3 { grid-template-columns: repeat(3, 1fr); }
+.selection-grid.cols4 { grid-template-columns: repeat(4, 1fr); }
+.selection-grid.cols2 { grid-template-columns: repeat(2, 1fr); }
+
+.select-card {
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--card);
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; gap: 8px;
+  user-select: none;
+}
+.select-card:hover { border-color: var(--orange); background: var(--orange-light); transform: translateY(-1px); }
+.select-card.selected { border-color: var(--orange); background: var(--orange-light); box-shadow: 0 0 0 1px var(--orange); }
+.select-card.selected .sc-icon { transform: scale(1.1); }
+.sc-icon { font-size: 28px; transition: transform 0.2s; }
+.sc-label { font-size: 12.5px; font-weight: 700; color: var(--text); }
+.sc-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+.select-card.selected .sc-label { color: var(--orange-dark); }
+
+/* List selection card (horizontal) */
+.select-list-card {
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--card);
+  display: flex; align-items: center; gap: 14px;
+  user-select: none;
+}
+.select-list-card:hover { border-color: var(--orange); background: var(--orange-light); }
+.select-list-card.selected { border-color: var(--orange); background: var(--orange-light); }
+.slc-icon { font-size: 22px; flex-shrink: 0; }
+.slc-text { flex: 1; }
+.slc-label { font-size: 13.5px; font-weight: 700; color: var(--text); }
+.slc-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.slc-check {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: all 0.2s;
+  font-size: 10px; color: transparent;
+}
+.select-list-card.selected .slc-check { background: var(--orange); border-color: var(--orange); color: #fff; }
+
+/* Language cards - special */
+.lang-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.lang-card {
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 24px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--card);
+  text-align: center;
+  position: relative; overflow: hidden;
+  user-select: none;
+}
+.lang-card:hover { border-color: var(--orange); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(224,122,47,0.15); }
+.lang-card.selected { border-color: var(--orange); box-shadow: 0 0 0 1px var(--orange), 0 6px 20px rgba(224,122,47,0.2); }
+.lang-card.selected::before {
+  content: '✓';
+  position: absolute; top: 10px; right: 10px;
+  width: 20px; height: 20px; background: var(--orange);
+  border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; color: #fff; font-size: 10px; font-weight: 700;
+  line-height: 20px; text-align: center;
+}
+.lc-flag { font-size: 40px; margin-bottom: 10px; }
+.lc-name { font-size: 15px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+.lc-tag { font-size: 11px; color: var(--text-muted); }
+.lang-card.recommended::after {
+  content: 'Recommended';
+  position: absolute; top: 10px; left: 10px;
+  background: var(--orange); color: #fff;
+  font-size: 9px; font-weight: 700; padding: 2px 7px;
+  border-radius: 20px;
+}
+
+/* Policy selection (step 6) */
+.policy-category { margin-bottom: 24px; }
+.pc-header {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 12px;
+}
+.pc-title { font-size: 13px; font-weight: 700; color: var(--text); }
+.pc-count { font-size: 11px; color: var(--text-muted); background: var(--muted); padding: 2px 8px; border-radius: 20px; }
+.pc-policies { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+.policy-checkbox {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer; transition: all 0.2s;
+  background: var(--card);
+  user-select: none;
+}
+.policy-checkbox:hover { border-color: var(--orange); background: var(--orange-light); }
+.policy-checkbox.checked { border-color: var(--orange); background: var(--orange-light); }
+.pc-check {
+  width: 18px; height: 18px; border-radius: 4px;
+  border: 2px solid var(--border);
+  flex-shrink: 0; transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; color: transparent;
+}
+.policy-checkbox.checked .pc-check { background: var(--orange); border-color: var(--orange); color: #fff; }
+.policy-checkbox.checked .pc-check::after { content: '✓'; }
+.pc-name { font-size: 12.5px; font-weight: 600; color: var(--text); flex: 1; }
+.pc-credits { font-size: 10px; color: var(--text-muted); margin-left: auto; background: var(--muted); padding: 2px 7px; border-radius: 20px; }
+
+/* Review step */
+.review-section { margin-bottom: 24px; }
+.rs-title { font-size: 13px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
+.review-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+}
+.review-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 18px; border-bottom: 1px solid var(--border);
+}
+.review-row:last-child { border-bottom: none; }
+.rr-key { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+.rr-val { font-size: 13px; color: var(--text); font-weight: 600; }
+.rr-edit { font-size: 11.5px; color: var(--orange); cursor: pointer; padding: 4px 8px; border-radius: 6px; transition: background 0.2s; }
+.rr-edit:hover { background: var(--orange-light); }
+
+.policy-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.policy-tag {
+  background: var(--orange-light); color: var(--orange-dark);
+  font-size: 12px; font-weight: 600; padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.credit-summary {
+  background: linear-gradient(135deg, var(--text), #3d4a5f);
+  border-radius: 12px; padding: 20px 22px;
+  display: flex; align-items: center; gap: 16px;
+  margin-top: 20px;
+}
+.cs-icon { font-size: 32px; }
+.cs-text { flex: 1; }
+.cs-label { color: rgba(255,255,255,0.6); font-size: 12px; margin-bottom: 4px; }
+.cs-value { color: #fff; font-size: 20px; font-weight: 800; }
+.cs-sub { color: rgba(255,255,255,0.4); font-size: 11px; margin-top: 2px; }
+.cs-btn {
+  background: var(--orange); color: #fff;
+  border: none; border-radius: var(--radius);
+  padding: 12px 24px; font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(224,122,47,0.4);
+  white-space: nowrap;
+}
+.cs-btn:hover { background: var(--orange-dark); transform: translateY(-1px); }
+
+/* Footer */
+.wizard-footer {
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  padding: 16px 32px;
+  display: flex; align-items: center; gap: 16px;
+  position: sticky; bottom: 0; z-index: 10;
+}
+.wf-back {
+  background: var(--card); border: 1.5px solid var(--border);
+  color: var(--text); border-radius: var(--radius);
+  padding: 11px 20px; font-size: 13.5px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 7px;
+}
+.wf-back:hover { border-color: var(--text-muted); }
+.wf-spacer { flex: 1; }
+.wf-hint { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+.wf-next {
+  background: var(--orange); color: #fff;
+  border: none; border-radius: var(--radius);
+  padding: 11px 24px; font-size: 13.5px; font-weight: 700;
+  cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(224,122,47,0.3);
+  display: flex; align-items: center; gap: 8px;
+}
+.wf-next:hover { background: var(--orange-dark); transform: translateY(-1px); }
+.wf-next:disabled { background: var(--muted); color: var(--text-muted); box-shadow: none; cursor: not-allowed; transform: none; }
+
+/* Textarea char count */
+.textarea-wrapper { position: relative; }
+.char-count { position: absolute; bottom: 8px; right: 12px; font-size: 10.5px; color: var(--text-muted); }
+
+/* ---- Variant selector ---- */
+.variant-bar {
+  background: #1a1a2e; padding: 12px 32px;
+  display: flex; align-items: center; gap: 12px;
+}
+.vb-label { color: rgba(255,255,255,0.4); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
+.vb-btn { background: none; border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.6); padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; transition: all 0.2s; }
+.vb-btn:hover { border-color: var(--orange); color: var(--orange); }
+.vb-btn.active { background: var(--orange); border-color: var(--orange); color: #fff; }
+.vb-spacer { flex: 1; }
+.vb-step-info { color: rgba(255,255,255,0.3); font-size: 11px; }
+
+/* Validate icon */
+.valid-icon { color: #4CAF50; font-size: 14px; }
+</style>
+</head>
+<body>
+
+<!-- Variant bar -->
+<div class="variant-bar">
+  <span class="vb-label">Intake Wizard</span>
+  <button class="vb-btn active" onclick="goToStep(1)">Step 1: Profile</button>
+  <button class="vb-btn" onclick="goToStep(2)">Step 2: Industry</button>
+  <button class="vb-btn" onclick="goToStep(3)">Step 3: Geography</button>
+  <button class="vb-btn" onclick="goToStep(4)">Step 4: Priorities</button>
+  <button class="vb-btn" onclick="goToStep(5)">Step 5: Language</button>
+  <button class="vb-btn" onclick="goToStep(6)">Step 6: Policies</button>
+  <button class="vb-btn" onclick="goToStep(7)">Step 7: Review</button>
+  <div class="vb-spacer"></div>
+  <span class="vb-step-info" id="vb-step-info">Step 1 of 7</span>
+</div>
+
+<!-- Navbar -->
+<nav class="wizard-nav">
+  <a class="wn-logo" href="#">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAADFCAYAAAB6i6Q8AAA+JklEQVR42u29eZxcx3Xf+6u79zbTs2KwAyQBkAS4bwApSgIXYAhJkQkpspXF0ott2XqOHUuOE78kek5sJV6S6FlWLD3LiqVYki15ERXbFBZCICmKArjvK1Zim8FsPUtvd638Ud0zt7tvd9/u6ekeEOf7+TQw9966datOz9S5deqcUwBBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEEtO7kYgfWOnW0EQBEFccvAXbgf/8vWw7zOQW9Xp1hBEZ2GdbsClhQZJ0SAxG6qigoGBAwDjkMDAmAQwBoABnAMMYJAgAeAAPHCAu+CcL5QVFcDzHDiuDcdlkJSVcMyTne5sKJikQ5EBRdHEMQDGhCwkJoMxSXSTc3icg3MXXkEGhQsA5+Dg4C4XdTAATAJjDK7rgnPA4x486ODubEf7a+027oOh3opU/htsfXzUeW0Gkee9Dn8LBEEsa2Ld/di6fScgxkgdgLEEHx2A/J4PfRQ9Qxs63eU6SNiw7bbiQTV5RABEWOH/Ov0O+vivqR//V7+JoQ2bO9pr+6Px/9f5hZWe88/7H7M+EL1nBpDse3XYfR1tFkF0BJqBhITJmrx20zU7Y13Jj6mKvBrgMoT8OEdhsiFK+v4VEwxWOCi8dPP5C+I/VnxDB5jneXw6l80eGD37zt9qenQuNbo8ZyI33/NhjJw+trm7t/eXNE3bwgDZ12mG0t8txud7DF6cnrF5MXAwxsQ0RAiP+eoBB4fHkTNzucOTF0e+CUjTUyOnOtJv5yOJ/8AGun4HEgM37TE+Y34JI+n/n61NTLDXZyC/TLMR4vJB6XQDLhXWbtp6Z//Q0J/rRmSlT1sAWBgZq2vjoNLVr0fjib2qpm09e/ztfw/A6nTfgzh77I2hoXXrvxKLx++RJKlO6YKKLem7X8VWk0VpHW6864Oablxx+u03fhOA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" alt="Wathiqa" style="height:32px;width:auto;" />
+    <span class="wn-logo-text">Wathiqa</span>
+  </a>
+  <span class="wn-sep">›</span>
+  <span class="wn-title">New Policy Order</span>
+  <div class="wn-spacer"></div>
+  <button class="wn-save">💾 Save Draft</button>
+  <button class="wn-exit">✕ Exit</button>
+</nav>
+
+<!-- Progress Header -->
+<div class="progress-header">
+  <div class="ph-inner">
+    <div class="ph-top">
+      <div class="ph-step-count">Step <strong id="current-step-label">1</strong> of <strong>7</strong></div>
+      <div id="step-name-label" class="ph-title">Organisation Profile</div>
+      <div class="ph-save-indicator">● Auto-saved</div>
+    </div>
+    <div class="progress-steps" id="progress-steps">
+      <div class="progress-step active" id="ps-1" onclick="goToStep(1)">
+        <div class="ps-num"><span class="ps-numval">1</span><span class="ps-check">✓</span></div>
+        <div class="ps-label">Profile</div>
+      </div>
+      <div class="progress-step" id="ps-2" onclick="goToStep(2)">
+        <div class="ps-num"><span class="ps-numval">2</span><span class="ps-check">✓</span></div>
+        <div class="ps-label">Industry</div>
+      </div>
+      <div class="progress-step" id="ps-3" onclick="goToStep(3)">
+        <div class="ps-num"><span class="ps-numval">3</span><span class="ps-check">✓</span></div>
+        <div class="ps-label">Geography</div>
+      </div>
+      <div class="progress-step" id="ps-4" onclick="goToStep(4)">
+        <div class="ps-num"><span class="ps-numval">4</span><span class="ps-check">✓</span></div>
+        <div class="ps-label">Priorities</div>
+      </div>
+      <div class="progress-step" id="ps-5" onclick="goToStep(5)">
+        <div class="ps-num"><span class="ps-numval">5</span><span class="ps-check">✓</span></div>
+        <div class="ps-label">Language</div>
+      </div>
+      <div class="progress-step" id="ps-6" onclick="goToStep(6)">
+        <div class="ps-num"><span class="ps-numval">6</span><span class="ps-check">✓</span></div>
+        <div class="ps-label">Policies</div>
+      </div>
+      <div class="progress-step" id="ps-7" onclick="goToStep(7)">
+        <div class="ps-num"><span class="ps-numval">7</span><span class="ps-check">✓</span></div>
+        <div class="ps-label">Confirm</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="wizard-main">
+
+  <!-- Sidebar Summary -->
+  <div class="wizard-sidebar">
+    <div class="ws-title">Your Order Summary</div>
+    <div class="ws-item done" id="ws-1">
+      <div class="ws-dot"></div>
+      <div>
+        <div class="ws-item-label">Organisation</div>
+        <div class="ws-item-value" id="ws-org">—</div>
+      </div>
+    </div>
+    <div class="ws-item" id="ws-2">
+      <div class="ws-dot"></div>
+      <div>
+        <div class="ws-item-label">Industry</div>
+        <div class="ws-item-value" id="ws-industry">—</div>
+      </div>
+    </div>
+    <div class="ws-item" id="ws-3">
+      <div class="ws-dot"></div>
+      <div>
+        <div class="ws-item-label">Geography</div>
+        <div class="ws-item-value" id="ws-geo">—</div>
+      </div>
+    </div>
+    <div class="ws-item" id="ws-4">
+      <div class="ws-dot"></div>
+      <div>
+        <div class="ws-item-label">Policy Focus</div>
+        <div class="ws-item-value" id="ws-focus">—</div>
+      </div>
+    </div>
+    <div class="ws-item" id="ws-5">
+      <div class="ws-dot"></div>
+      <div>
+        <div class="ws-item-label">Language</div>
+        <div class="ws-item-value" id="ws-lang">—</div>
+      </div>
+    </div>
+    <div class="ws-item" id="ws-6">
+      <div class="ws-dot"></div>
+      <div>
+        <div class="ws-item-label">Policies Selected</div>
+        <div class="ws-item-value" id="ws-count">0 policies</div>
+      </div>
+    </div>
+    <div class="ws-credit-box">
+      <div class="wsb-label">Estimated Cost</div>
+      <div class="wsb-val" id="ws-credits">3</div>
+      <div class="wsb-sub">credits needed</div>
+    </div>
+  </div>
+
+  <!-- FORM AREA -->
+  <div class="wizard-form-area">
+
+    <!-- STEP 1: Organization Profile -->
+    <div class="step-view active" id="step-1">
+      <div class="step-header">
+        <div class="step-tag">📋 Step 1 of 7</div>
+        <div class="step-title">Tell us about your organisation</div>
+        <div class="step-desc">This helps Wathiqa tailor every policy to your exact context, sector, and applicable legal framework.</div>
+      </div>
+
+      <div class="form-row cols2">
+        <div class="form-group">
+          <label class="form-label">Organisation Name <span class="req">*</span></label>
+          <input type="text" placeholder="e.g. Smart Civic Solutions" value="Smart Civic Solutions" id="f-org-name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Organisation Type <span class="req">*</span></label>
+          <select id="f-org-type">
+            <option value="">Select type...</option>
+            <option selected>Civil Society / NGO</option>
+            <option>Private Sector Company</option>
+            <option>Government / Public Body</option>
+            <option>International Organisation</option>
+            <option>Academic / Research</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row cols2">
+        <div class="form-group">
+          <label class="form-label">Organisation Size <span class="req">*</span></label>
+          <select>
+            <option>11–50 employees</option>
+            <option>1–10 employees</option>
+            <option>51–200 employees</option>
+            <option>201–500 employees</option>
+            <option>500+ employees</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Year Founded</label>
+          <input type="text" placeholder="e.g. 2015">
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom:20px;">
+        <label class="form-label">Mission / Brief Description</label>
+        <div class="textarea-wrapper">
+          <textarea placeholder="Briefly describe what your organisation does and its core mission...">Smart Civic Solutions specializes in gender equality consulting, policy design, and organizational change in the MENA region.</textarea>
+          <span class="char-count">152 / 300</span>
+        </div>
+        <div class="form-hint">This helps our AI understand the spirit of your work and write policies that match your culture.</div>
+      </div>
+    </div>
+
+    <!-- STEP 2: Industry Selection -->
+    <div class="step-view" id="step-2">
+      <div class="step-header">
+        <div class="step-tag">🏭 Step 2 of 7</div>
+        <div class="step-title">What sector do you operate in?</div>
+        <div class="step-desc">Select your primary sector. This determines which regulatory frameworks and legal standards apply to your policies.</div>
+      </div>
+
+      <div class="selection-grid cols3">
+        <div class="select-card selected" onclick="toggleSelect(this)">
+          <div class="sc-icon">🤝</div>
+          <div class="sc-label">Civil Society / NGO</div>
+          <div class="sc-desc">Non-profit, advocacy, humanitarian</div>
+        </div>
+        <div class="select-card" onclick="toggleSelect(this)">
+          <div class="sc-icon">🏢</div>
+          <div class="sc-label">Private Sector</div>
+          <div class="sc-desc">Companies, enterprises, SMEs</div>
+        </div>
+        <div class="select-card" onclick="toggleSelect(this)">
+          <div class="sc-icon">🏛️</div>
+          <div class="sc-label">Government</div>
+          <div class="sc-desc">Public bodies, ministries, agencies</div>
+        </div>
+        <div class="select-card" onclick="toggleSelect(this)">
+          <div class="sc-icon">🌍</div>
+          <div class="sc-label">International Org.</div>
+          <div class="sc-desc">UN agencies, IFIs, intergovernmental</div>
+        </div>
+        <div class="select-card" onclick="toggleSelect(this)">
+          <div class="sc-icon">🎓</div>
+          <div class="sc-label">Education</div>
+          <div class="sc-desc">Schools, universities, research</div>
+        </div>
+        <div class="select-card" onclick="toggleSelect(this)">
+          <div class="sc-icon">🏥</div>
+          <div class="sc-label">Healthcare</div>
+          <div class="sc-desc">Hospitals, clinics, health orgs</div>
+        </div>
+        <div class="select-card" onclick="toggleSelect(this)">
+          <div class="sc-icon">🏗️</div>
+          <div class="sc-label">Construction</div>
+          <div class="sc-desc">Engineering, real estate, building</div>
+        </div>
+        <div class="select-card" onclick="toggleSelect(this)">
+          <div class="sc-icon">💻</div>
+          <div class="sc-label">Technology</div>
+          <div class="sc-desc">Software, IT, digital services</div>
+        </div>
+        <div class="select-card" onclick="toggleSelect(this)">
+          <div class="sc-icon">📦</div>
+          <div class="sc-label">Other</div>
+          <div class="sc-desc">Media, logistics, manufacturing...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: Geography -->
+    <div class="step-view" id="step-3">
+      <div class="step-header">
+        <div class="step-tag">🌍 Step 3 of 7</div>
+        <div class="step-title">Where does your organisation operate?</div>
+        <div class="step-desc">Select your primary country and region. Wathiqa will use the applicable local laws, labour standards, and regulatory requirements.</div>
+      </div>
+
+      <div class="form-row cols2">
+        <div class="form-group">
+          <label class="form-label">Primary Country <span class="req">*</span></label>
+          <select>
+            <option selected>Egypt 🇪🇬</option>
+            <option>Spain 🇪🇸</option>
+            <option>Jordan 🇯🇴</option>
+            <option>Morocco 🇲🇦</option>
+            <option>Tunisia 🇹🇳</option>
+            <option>Lebanon 🇱🇧</option>
+            <option>Saudi Arabia 🇸🇦</option>
+            <option>UAE 🇦🇪</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Region</label>
+          <select>
+            <option selected>MENA (Middle East & North Africa)</option>
+            <option>Europe</option>
+            <option>Sub-Saharan Africa</option>
+            <option>South Asia</option>
+            <option>Multi-regional</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom:24px;">
+        <label class="form-label">Do you operate across multiple countries?</label>
+        <div class="selection-grid cols2" style="margin-top:8px;">
+          <div class="select-list-card" onclick="toggleListSelect(this, 'cross-country')">
+            <span class="slc-icon">🌐</span>
+            <div class="slc-text">
+              <div class="slc-label">Yes, we operate in multiple countries</div>
+              <div class="slc-desc">Policies will include multi-jurisdiction notes</div>
+            </div>
+            <div class="slc-check">✓</div>
+          </div>
+          <div class="select-list-card selected" onclick="toggleListSelect(this, 'cross-country')">
+            <span class="slc-icon">🏠</span>
+            <div class="slc-text">
+              <div class="slc-label">No, we operate in one country</div>
+              <div class="slc-desc">Focused on primary country regulations</div>
+            </div>
+            <div class="slc-check">✓</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Applicable Legal Frameworks</label>
+        <input type="text" placeholder="e.g. Egyptian Labour Law No. 12/2003, CEDAW, ILO Convention 190..." value="Egyptian Labour Law No. 12/2003, ILO Convention 190, CEDAW">
+        <div class="form-hint">Leave blank to auto-detect based on your country and sector.</div>
+      </div>
+    </div>
+
+    <!-- STEP 4: Policy Priorities -->
+    <div class="step-view" id="step-4">
+      <div class="step-header">
+        <div class="step-tag">🎯 Step 4 of 7</div>
+        <div class="step-title">What are your policy priorities?</div>
+        <div class="step-desc">Select the themes most relevant to your organisation. This shapes the depth and focus of every generated policy.</div>
+      </div>
+
+      <div class="selection-grid cols2" style="margin-bottom:24px;">
+        <div class="select-list-card selected" onclick="toggleListSelect(this)">
+          <span class="slc-icon">⚖️</span>
+          <div class="slc-text">
+            <div class="slc-label">Gender Equality & Inclusion</div>
+            <div class="slc-desc">Anti-discrimination, equal pay, inclusion</div>
+          </div>
+          <div class="slc-check">✓</div>
+        </div>
+        <div class="select-list-card selected" onclick="toggleListSelect(this)">
+          <span class="slc-icon">🛡️</span>
+          <div class="slc-text">
+            <div class="slc-label">Workplace Safety & Prevention</div>
+            <div class="slc-desc">Harassment, GBV prevention, safe environments</div>
+          </div>
+          <div class="slc-check">✓</div>
+        </div>
+        <div class="select-list-card" onclick="toggleListSelect(this)">
+          <span class="slc-icon">👶</span>
+          <div class="slc-text">
+            <div class="slc-label">Employee Benefits & Leave</div>
+            <div class="slc-desc">Parental leave, childcare, wellbeing</div>
+          </div>
+          <div class="slc-check">✓</div>
+        </div>
+        <div class="select-list-card" onclick="toggleListSelect(this)">
+          <span class="slc-icon">📢</span>
+          <div class="slc-text">
+            <div class="slc-label">Grievance & Complaint Handling</div>
+            <div class="slc-desc">Reporting mechanisms, case management</div>
+          </div>
+          <div class="slc-check">✓</div>
+        </div>
+        <div class="select-list-card" onclick="toggleListSelect(this)">
+          <span class="slc-icon">📈</span>
+          <div class="slc-text">
+            <div class="slc-label">Leadership & Career Development</div>
+            <div class="slc-desc">Promotion equity, mentorship, training</div>
+          </div>
+          <div class="slc-check">✓</div>
+        </div>
+        <div class="select-list-card" onclick="toggleListSelect(this)">
+          <span class="slc-icon">🏛️</span>
+          <div class="slc-text">
+            <div class="slc-label">Governance & Accountability</div>
+            <div class="slc-desc">Codes of conduct, ethics, compliance</div>
+          </div>
+          <div class="slc-check">✓</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Any specific focus areas or requirements?</label>
+        <textarea placeholder="e.g. We work with a high proportion of female field staff, so policies addressing safety in remote locations are especially important..."></textarea>
+      </div>
+    </div>
+
+    <!-- STEP 5: Language -->
+    <div class="step-view" id="step-5">
+      <div class="step-header">
+        <div class="step-tag">🌐 Step 5 of 7</div>
+        <div class="step-title">Choose your policy language</div>
+        <div class="step-desc">Wathiqa generates policies in Arabic, English, or both. Bilingual documents are fully professional — not automated translations.</div>
+      </div>
+
+      <div class="lang-cards">
+        <div class="lang-card" onclick="selectLang(this)">
+          <div class="lc-flag">🇬🇧</div>
+          <div class="lc-name">English</div>
+          <div class="lc-tag">International Standard</div>
+        </div>
+        <div class="lang-card" onclick="selectLang(this)">
+          <div class="lc-flag">🇪🇬</div>
+          <div class="lc-name">عربي</div>
+          <div class="lc-tag">MENA Region</div>
+        </div>
+        <div class="lang-card" onclick="selectLang(this)">
+          <div class="lc-flag">🇫🇷</div>
+          <div class="lc-name">Français</div>
+          <div class="lc-tag">French</div>
+        </div>
+        <div class="lang-card" onclick="selectLang(this)">
+          <div class="lc-flag">🇪🇸</div>
+          <div class="lc-name">Español</div>
+          <div class="lc-tag">Spanish</div>
+        </div>
+        <div class="lang-card" onclick="selectLang(this)">
+          <div class="lc-flag">🇩🇪</div>
+          <div class="lc-name">Deutsch</div>
+          <div class="lc-tag">German</div>
+        </div>
+        <div class="lang-card" onclick="selectLang(this)">
+          <div class="lc-flag">🇵🇹</div>
+          <div class="lc-name">Português</div>
+          <div class="lc-tag">Portuguese</div>
+        </div>
+        <div class="lang-card" onclick="selectLang(this)">
+          <div class="lc-flag">🇹🇷</div>
+          <div class="lc-name">Türkçe</div>
+          <div class="lc-tag">Turkish</div>
+        </div>
+        <div class="lang-card recommended selected" onclick="selectLang(this)">
+          <div class="lc-flag">🌐</div>
+          <div class="lc-name">Bilingual</div>
+          <div class="lc-tag">Arabic + English</div>
+        </div>
+      </div>
+
+      <div style="background:var(--orange-light);border:1px solid rgba(224,122,47,0.2);border-radius:var(--radius);padding:16px 18px;margin-top:24px;display:flex;gap:14px;align-items:flex-start;">
+        <span style="font-size:20px;flex-shrink:0;">💡</span>
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;">Why bilingual?</div>
+          <div style="font-size:12.5px;color:var(--text-muted);line-height:1.6;">Bilingual policies ensure all staff — regardless of language preference — can understand their rights and responsibilities. This is especially important for MENA organisations with mixed-language teams.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 6: Policy Selection -->
+    <div class="step-view" id="step-6">
+      <div class="step-header">
+        <div class="step-tag">📋 Step 6 of 7</div>
+        <div class="step-title">Select your policies</div>
+        <div class="step-desc">Choose the specific policies you need generated. Each policy costs 1 credit. Select as many as your bundle allows.</div>
+      </div>
+
+      <div class="policy-category">
+        <div class="pc-header">
+          <div class="pc-title">🛡️ Essential Policies</div>
+          <div class="pc-count">Essential</div>
+        </div>
+        <div class="pc-policies">
+          <div class="policy-checkbox checked" onclick="togglePolicyCheck(this)">
+            <div class="pc-check"></div>
+            <span class="pc-name">Anti-Harassment Policy</span>
+            <span class="pc-credits">1 credit</span>
+          </div>
+          <div class="policy-checkbox" onclick="togglePolicyCheck(this)">
+            <div class="pc-check"></div>
+            <span class="pc-name">Workplace Safety Policy</span>
+            <span class="pc-credits">1 credit</span>
+          </div>
+          <div class="policy-checkbox checked" onclick="togglePolicyCheck(this)">
+            <div class="pc-check"></div>
+            <span class="pc-name">Non-Discrimination Policy</span>
+            <span class="pc-credits">1 credit</span>
+          </div>
+          <div class="policy-checkbox" onclick="togglePolicyCheck(this)">
+            <div class="pc-check"></div>
+            <span class="pc-name">Code of Conduct</span>
+            <span class="pc-credits">1 credit</span>
+          </div>
+          <div class="policy-checkbox" onclick="togglePolicyCheck(this)">
+            <div class="pc-check"></div>
+            <span class="pc-name">Parental Leave Policy</span>
+            <span class="pc-credits">1 credit</span>
+          </div>
+          <div class="policy-checkbox" onclick="togglePolicyCheck(this)">
+            <div class="pc-check"></div>
+            <span class="pc-name">Retaliation Prevention Policy</span>
+            <span class="pc-credits">1 credit</span>
+          </div>
+          <div class="policy-checkbox" onclick="togglePolicyCheck(this)">
+            <div class="pc-check"></div>
+            <span class="pc-name">Whistleblower Protection Policy</span>
+            <span class="pc-credits">1 credit</span>
+          </div>
+          <div class="policy-checkbox" onclick="togglePolicyCheck(this)">
+            <div class="pc-check"></div>
+            <span class="pc-name">Equal Pay Policy</span>
+            <span class="pc-credits">1 credit</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="policy-category">
+        <div class="pc-header">
+          <div class="pc-title">📋 Priority A Policies</div>
+          <div class="pc-count">Optional</div>
+        </div>
+        <div class="pc-policies">
+          <div class="policy-checkbox checked" onclick="togglePolicyCheck(this)">
+            <div class="pc-check"></div>
+            <span class="pc-name">Grievance & Complaint Handling</span>
+            <span class="pc-credits">1 credit</span>
+          </div>
+          <div class="policy-checkbox" onclick="togglePolicyCheck(this)">
+            <div class="pc-check"></div>
+            <span class="pc-name">Diversity & Inclusion</span>
+            <span class="pc-credits">1 credit</span>
+          </div>
+          <div class="policy-checkbox" onclick="togglePolicyCheck(this)">
+            <div class="pc-check"></div>
+            <span class="pc-name">Flexible Work Arrangements</span>
+            <span class="pc-credits">1 credit</span>
+          </div>
+          <div class="policy-checkbox" onclick="togglePolicyCheck(this)">
+            <div class="pc-check"></div>
+            <span class="pc-name">Health & Safety Standards</span>
+            <span class="pc-credits">1 credit</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="policy-category">
+        <div class="pc-header">
+          <div class="pc-title">🌍 Priority B Policies</div>
+          <div class="pc-count">Optional</div>
+        </div>
+        <div class="pc-policies">
+          <div class="policy-checkbox" onclick="togglePolicyCheck(this)">
+            <div class="pc-check"></div>
+            <span class="pc-name">Remote Work Policy</span>
+            <span class="pc-credits">1 credit</span>
+          </div>
+          <div class="policy-checkbox" onclick="togglePolicyCheck(this)">
+            <div class="pc-check"></div>
+            <span class="pc-name">Professional Development</span>
+            <span class="pc-credits">1 credit</span>
+          </div>
+          <div class="policy-checkbox" onclick="togglePolicyCheck(this)">
+            <div class="pc-check"></div>
+            <span class="pc-name">Conduct & Discipline</span>
+            <span class="pc-credits">1 credit</span>
+          </div>
+          <div class="policy-checkbox" onclick="togglePolicyCheck(this)">
+            <div class="pc-check"></div>
+            <span class="pc-name">Performance Management</span>
+            <span class="pc-credits">1 credit</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 7: Review & Confirm -->
+    <div class="step-view" id="step-7">
+      <div class="step-header">
+        <div class="step-tag">✅ Step 7 of 7</div>
+        <div class="step-title">Review your order</div>
+        <div class="step-desc">Everything looks good? Confirm your order and Wathiqa will begin generating your policies immediately.</div>
+      </div>
+
+      <div class="review-section">
+        <div class="rs-title">Organisation</div>
+        <div class="review-card">
+          <div class="review-row">
+            <span class="rr-key">Name</span>
+            <span class="rr-val">Smart Civic Solutions</span>
+            <span class="rr-edit" onclick="goToStep(1)">Edit</span>
+          </div>
+          <div class="review-row">
+            <span class="rr-key">Type</span>
+            <span class="rr-val">Civil Society / NGO</span>
+          </div>
+          <div class="review-row">
+            <span class="rr-key">Size</span>
+            <span class="rr-val">11–50 employees</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-section">
+        <div class="rs-title">Scope</div>
+        <div class="review-card">
+          <div class="review-row">
+            <span class="rr-key">Sector</span>
+            <span class="rr-val">Civil Society / NGO</span>
+            <span class="rr-edit" onclick="goToStep(2)">Edit</span>
+          </div>
+          <div class="review-row">
+            <span class="rr-key">Country</span>
+            <span class="rr-val">Egypt 🇪🇬 · MENA Region</span>
+            <span class="rr-edit" onclick="goToStep(3)">Edit</span>
+          </div>
+          <div class="review-row">
+            <span class="rr-key">Language</span>
+            <span class="rr-val">🌐 Bilingual (Arabic + English)</span>
+            <span class="rr-edit" onclick="goToStep(5)">Edit</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-section">
+        <div class="rs-title">Policies Selected (3)</div>
+        <div class="review-card">
+          <div class="review-row">
+            <div class="policy-tags">
+              <span class="policy-tag">🛡️ Anti-Harassment Policy</span>
+              <span class="policy-tag">📋 Non-Discrimination Policy</span>
+              <span class="policy-tag">⚖️ Equal Pay Policy</span>
+            </div>
+            <span class="rr-edit" onclick="goToStep(6)">Edit</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="credit-summary">
+        <div class="cs-icon">💎</div>
+        <div class="cs-text">
+          <div class="cs-label">Total credits required</div>
+          <div class="cs-value">3 credits</div>
+          <div class="cs-sub">You have 7 credits remaining · 4 will remain after this order</div>
+        </div>
+        <button class="cs-btn" onclick="alert('Generating your policies! You would be redirected to the generation progress page.')">
+          ✨ Generate Now
+        </button>
+      </div>
+    </div>
+
+  </div><!-- end form area -->
+</div><!-- end main -->
+
+<!-- Footer -->
+<div class="wizard-footer">
+  <button class="wf-back" id="btn-back" onclick="prevStep()">← Back</button>
+  <div class="wf-spacer"></div>
+  <div class="wf-hint" id="footer-hint">💡 Progress is saved automatically</div>
+  <button class="wf-next" id="btn-next" onclick="nextStep()">
+    Next: Industry <span>→</span>
+  </button>
+</div>
+
+<script>
+let currentStep = 1;
+const stepNames = ['', 'Organisation Profile', 'Industry Selection', 'Geography & Jurisdiction', 'Policy Priorities', 'Language Preference', 'Policy Selection', 'Review & Confirm'];
+const stepNextLabels = ['', 'Next: Industry', 'Next: Geography', 'Next: Priorities', 'Next: Language', 'Next: Policies', 'Next: Review', 'Generate Policies'];
+
+function goToStep(n) {
+  if (n < 1 || n > 7) return;
+  // Update step views
+  document.querySelectorAll('.step-view').forEach(el => el.classList.remove('active'));
+  document.getElementById('step-' + n).classList.add('active');
+  // Update progress steps
+  document.querySelectorAll('.progress-step').forEach((el, i) => {
+    el.classList.remove('active', 'done');
+    if (i + 1 < n) el.classList.add('done');
+    if (i + 1 === n) el.classList.add('active');
+  });
+  // Update labels
+  document.getElementById('current-step-label').textContent = n;
+  document.getElementById('step-name-label').textContent = stepNames[n];
+  // Update variant bar
+  document.querySelectorAll('.vb-btn').forEach((el, i) => {
+    el.classList.toggle('active', i === n - 1);
+  });
+  document.getElementById('vb-step-info').textContent = 'Step ' + n + ' of 7';
+  // Update footer
+  document.getElementById('btn-back').style.visibility = n === 1 ? 'hidden' : 'visible';
+  document.getElementById('btn-next').textContent = stepNextLabels[n] + ' →';
+  if (n === 7) {
+    document.getElementById('btn-next').style.display = 'none';
+    document.getElementById('footer-hint').textContent = '💡 Review carefully before generating';
+  } else {
+    document.getElementById('btn-next').style.display = 'flex';
+    document.getElementById('footer-hint').textContent = '💡 Progress is saved automatically';
+  }
+  // Update sidebar
+  updateSidebar(n);
+  currentStep = n;
+}
+
+function updateSidebar(n) {
+  const items = document.querySelectorAll('.ws-item');
+  items.forEach((el, i) => {
+    el.classList.remove('active', 'done');
+    if (i + 1 < n) el.classList.add('done');
+    if (i + 1 === n) el.classList.add('active');
+  });
+  // Set summary values
+  if (n >= 1) document.getElementById('ws-org').textContent = 'Smart Civic Solutions';
+  if (n >= 2) document.getElementById('ws-industry').textContent = 'Civil Society / NGO';
+  if (n >= 3) document.getElementById('ws-geo').textContent = 'Egypt · MENA';
+  if (n >= 4) document.getElementById('ws-focus').textContent = 'Gender, Safety';
+  if (n >= 5) document.getElementById('ws-lang').textContent = 'Bilingual (AR+EN)';
+  if (n >= 6) document.getElementById('ws-count').textContent = '3 policies';
+}
+
+function nextStep() { goToStep(currentStep + 1); }
+function prevStep() { goToStep(currentStep - 1); }
+
+function toggleSelect(el) {
+  // For single select in grid
+  el.closest('.selection-grid').querySelectorAll('.select-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function toggleListSelect(el, group) {
+  if (group) {
+    el.closest('.selection-grid').querySelectorAll('.select-list-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+  } else {
+    el.classList.toggle('selected');
+  }
+}
+function togglePolicyCheck(el) {
+  el.classList.toggle('checked');
+  // Update count
+  const checked = document.querySelectorAll('.policy-checkbox.checked').length;
+  document.getElementById('ws-credits').textContent = checked;
+  document.getElementById('ws-count').textContent = checked + ' polic' + (checked === 1 ? 'y' : 'ies');
+}
+function selectLang(el) {
+  document.querySelectorAll('.lang-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// Initialize
+goToStep(1);
+</script>
+
+</body>
+</html>

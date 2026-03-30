@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wathiqa — Dashboard Shell Mockup</title>
+<style>
+/* ============================================================
+   WATHIQA BRAND TOKENS (from Wathiqa_Brand_Guidelines.md)
+   ============================================================ */
+:root {
+  --bg:           #FCFCFC;
+  --card:         #FFFFFF;
+  --text:         #293040;
+  --text-muted:   #737D8C;
+  --border:       #DEE2E8;
+  --muted:        #EFF1F3;
+  --orange:       #E07A2F;
+  --orange-dark:  #BF5A13;
+  --orange-light: #FFF3E0;
+  --sidebar-bg:   #2E2E2E;
+  --sidebar-text: #F5F5F5;
+  --sidebar-active: #E07830;
+  --sidebar-hover: #3D3D3D;
+  --radius:       10px;
+  --shadow-sm:    0 1px 3px rgba(41,48,64,0.08);
+  --shadow-md:    0 4px 16px rgba(41,48,64,0.10);
+  --shadow-lg:    0 8px 32px rgba(41,48,64,0.14);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  background: #1a1a2e;
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ---- Page Selector ---- */
+.page-selector {
+  background: #1a1a2e;
+  padding: 24px 32px 16px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.page-selector-title {
+  color: rgba(255,255,255,0.5);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.page-btn {
+  background: none;
+  border: 1.5px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.6);
+  padding: 8px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.page-btn:hover { border-color: var(--orange); color: var(--orange); }
+.page-btn.active { background: var(--orange); border-color: var(--orange); color: #fff; }
+
+/* ---- Variant Label ---- */
+.variant-label {
+  color: rgba(255,255,255,0.3);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-left: auto;
+  padding: 4px 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px;
+}
+
+/* ---- Dashboard Wrapper ---- */
+.dashboard-wrapper {
+  display: flex;
+  height: calc(100vh - 73px);
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+.sidebar {
+  width: 240px;
+  min-width: 240px;
+  background: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  position: relative;
+  overflow: hidden;
+}
+.sidebar::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--orange) 0%, var(--orange-dark) 100%);
+}
+
+.sidebar-logo {
+  padding: 24px 20px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.sidebar-logo-img {
+  height: 32px;
+  filter: brightness(0) invert(1);
+}
+.sidebar-logo-fallback {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo-mark {
+  width: 32px; height: 32px;
+  background: var(--orange);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 16px; color: #fff;
+  position: relative; overflow: hidden;
+}
+.logo-mark::after {
+  content: '';
+  position: absolute; bottom: 0; right: 0;
+  width: 0; height: 0;
+  border-style: solid;
+  border-width: 0 0 10px 10px;
+  border-color: transparent transparent rgba(0,0,0,0.25) transparent;
+}
+.logo-wordmark { color: #fff; font-size: 17px; font-weight: 700; letter-spacing: -0.02em; }
+
+.sidebar-org {
+  padding: 12px 16px;
+  margin: 12px 16px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.sidebar-org:hover { background: rgba(255,255,255,0.08); }
+.org-avatar {
+  width: 32px; height: 32px;
+  background: linear-gradient(135deg, #E07A2F, #BF5A13);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: #fff;
+  flex-shrink: 0;
+}
+.org-info { flex: 1; min-width: 0; }
+.org-name { color: var(--sidebar-text); font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.org-plan { color: rgba(245,245,245,0.45); font-size: 11px; }
+.org-chevron { color: rgba(245,245,245,0.3); font-size: 12px; }
+
+.sidebar-nav { flex: 1; padding: 8px 0; overflow-y: auto; }
+.sidebar-nav::-webkit-scrollbar { width: 0; }
+
+.nav-section-label {
+  color: rgba(245,245,245,0.3);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 16px 20px 6px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  color: rgba(245,245,245,0.6);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 0;
+  position: relative;
+  margin: 1px 8px;
+  border-radius: 8px;
+}
+.nav-item:hover {
+  background: var(--sidebar-hover);
+  color: var(--sidebar-text);
+}
+.nav-item.active {
+  background: rgba(224, 120, 48, 0.15);
+  color: var(--sidebar-active);
+}
+.nav-item.active::before {
+  content: '';
+  position: absolute; left: 0; top: 50%;
+  transform: translateY(-50%);
+  width: 3px; height: 20px;
+  background: var(--sidebar-active);
+  border-radius: 0 3px 3px 0;
+  left: -8px;
+}
+.nav-icon {
+  width: 18px; height: 18px;
+  opacity: 0.7;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+}
+.nav-item.active .nav-icon { opacity: 1; }
+.nav-badge {
+  margin-left: auto;
+  background: var(--orange);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 20px;
+}
+.nav-badge.gray {
+  background: rgba(245,245,245,0.1);
+  color: rgba(245,245,245,0.5);
+}
+
+.sidebar-credits {
+  margin: 8px 12px;
+  padding: 14px 16px;
+  background: rgba(224, 122, 47, 0.1);
+  border: 1px solid rgba(224, 122, 47, 0.2);
+  border-radius: var(--radius);
+}
+.credits-label { color: rgba(245,245,245,0.5); font-size: 11px; font-weight: 500; margin-bottom: 6px; }
+.credits-amount { color: var(--orange); font-size: 22px; font-weight: 800; line-height: 1; }
+.credits-sublabel { color: rgba(245,245,245,0.35); font-size: 10px; margin-top: 2px; }
+.credits-bar { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 10px; overflow: hidden; }
+.credits-bar-fill { height: 100%; background: linear-gradient(90deg, var(--orange), var(--orange-dark)); border-radius: 2px; width: 35%; }
+.credits-cta {
+  display: block; text-align: center;
+  background: var(--orange); color: #fff;
+  font-size: 12px; font-weight: 600;
+  padding: 8px; border-radius: 6px;
+  margin-top: 10px; cursor: pointer;
+  border: none; width: 100%;
+  transition: background 0.2s;
+}
+.credits-cta:hover { background: var(--orange-dark); }
+
+.sidebar-bottom {
+  padding: 12px 0;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+.main-content {
+  flex: 1;
+  background: var(--bg);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+.main-content::-webkit-scrollbar { width: 6px; }
+.main-content::-webkit-scrollbar-track { background: transparent; }
+.main-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* Topbar */
+.topbar {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: sticky; top: 0;
+  z-index: 10;
+}
+.topbar-breadcrumb { color: var(--text-muted); font-size: 13.5px; display: flex; align-items: center; gap: 6px; }
+.topbar-breadcrumb span { color: var(--text); font-weight: 600; }
+.topbar-breadcrumb .sep { color: var(--border); }
+.topbar-spacer { flex: 1; }
+.topbar-search {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--muted); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 8px 14px;
+  color: var(--text-muted); font-size: 13px;
+  width: 220px; cursor: pointer;
+  transition: all 0.2s;
+}
+.topbar-search:hover { border-color: var(--orange); background: var(--orange-light); }
+.topbar-icon-btn {
+  width: 36px; height: 36px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--card);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--text-muted); font-size: 16px;
+  transition: all 0.2s; position: relative;
+}
+.topbar-icon-btn:hover { border-color: var(--orange); color: var(--orange); }
+.notif-dot {
+  position: absolute; top: -3px; right: -3px;
+  width: 8px; height: 8px;
+  background: var(--orange); border-radius: 50%;
+  border: 2px solid var(--card);
+}
+.topbar-avatar {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, #E07A2F, #BF5A13);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 13px; font-weight: 700; cursor: pointer;
+  border: 2px solid var(--orange-light);
+}
+
+/* Content Area */
+.content-area { padding: 32px; flex: 1; }
+
+/* Welcome Banner */
+.welcome-banner {
+  background: linear-gradient(135deg, var(--text) 0%, #3d4a5f 100%);
+  border-radius: 16px;
+  padding: 28px 32px;
+  display: flex; align-items: center; gap: 24px;
+  margin-bottom: 32px;
+  position: relative; overflow: hidden;
+}
+.welcome-banner::before {
+  content: '';
+  position: absolute; top: -40px; right: -40px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(224,122,47,0.3), transparent 70%);
+  border-radius: 50%;
+}
+.welcome-banner::after {
+  content: '';
+  position: absolute; bottom: -60px; right: 120px;
+  width: 160px; height: 160px;
+  background: radial-gradient(circle, rgba(224,122,47,0.15), transparent 70%);
+  border-radius: 50%;
+}
+.welcome-text { flex: 1; position: relative; z-index: 1; }
+.welcome-greeting { color: rgba(255,255,255,0.6); font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+.welcome-name { color: #fff; font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+.welcome-sub { color: rgba(255,255,255,0.5); font-size: 13.5px; line-height: 1.5; }
+.welcome-cta {
+  background: var(--orange); color: #fff;
+  border: none; border-radius: var(--radius);
+  padding: 12px 24px; font-size: 14px; font-weight: 600;
+  cursor: pointer; white-space: nowrap;
+  display: flex; align-items: center; gap: 8px;
+  position: relative; z-index: 1;
+  transition: all 0.2s; box-shadow: 0 4px 16px rgba(224,122,47,0.4);
+}
+.welcome-cta:hover { background: var(--orange-dark); transform: translateY(-1px); }
+
+/* Stats Row */
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  display: flex; align-items: flex-start; gap: 16px;
+  transition: all 0.2s;
+  position: relative; overflow: hidden;
+}
+.stat-card:hover { box-shadow: var(--shadow-md); border-color: rgba(224,122,47,0.3); transform: translateY(-1px); }
+.stat-icon {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.stat-icon.orange { background: var(--orange-light); }
+.stat-icon.green { background: #E8F5E9; }
+.stat-icon.blue { background: #E3F2FD; }
+.stat-icon.purple { background: #F3E5F5; }
+.stat-data { flex: 1; }
+.stat-label { color: var(--text-muted); font-size: 12px; font-weight: 500; margin-bottom: 4px; }
+.stat-value { color: var(--text); font-size: 24px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+.stat-delta { font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+.stat-delta.up { color: #2E7D32; }
+.stat-delta.neutral { color: var(--text-muted); }
+
+/* Grid layout */
+.dashboard-grid { display: grid; grid-template-columns: 1fr 340px; gap: 24px; margin-bottom: 32px; }
+
+/* Section Card */
+.section-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.section-card-header {
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+}
+.section-card-title { color: var(--text); font-size: 15px; font-weight: 700; flex: 1; }
+.section-card-subtitle { color: var(--text-muted); font-size: 12px; font-weight: 400; margin-top: 1px; }
+.section-card-action {
+  color: var(--orange); font-size: 13px; font-weight: 600;
+  cursor: pointer; padding: 6px 12px;
+  border: 1px solid rgba(224,122,47,0.3); border-radius: 8px;
+  transition: all 0.2s; background: none;
+}
+.section-card-action:hover { background: var(--orange-light); }
+
+/* Policy Table */
+.policy-table { width: 100%; border-collapse: collapse; }
+.policy-table th {
+  padding: 10px 22px;
+  text-align: left;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--muted);
+  border-bottom: 1px solid var(--border);
+}
+.policy-table td {
+  padding: 14px 22px;
+  font-size: 13.5px;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.policy-table tr:last-child td { border-bottom: none; }
+.policy-table tr:hover td { background: #fafafa; }
+.policy-title-cell { display: flex; align-items: center; gap: 12px; }
+.policy-icon {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  background: var(--orange-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.policy-name { font-weight: 600; color: var(--text); margin-bottom: 2px; }
+.policy-type { color: var(--text-muted); font-size: 11px; }
+
+.status-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px; font-weight: 600;
+}
+.status-badge.completed { background: #E8F5E9; color: #2E7D32; }
+.status-badge.generating { background: var(--orange-light); color: var(--orange-dark); }
+.status-badge.draft { background: var(--muted); color: var(--text-muted); }
+.status-badge.review { background: #E3F2FD; color: #1565C0; }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+/* Generating animation */
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+.status-badge.generating .status-dot { animation: pulse 1.5s ease-in-out infinite; }
+
+.policy-date { color: var(--text-muted); font-size: 12px; }
+.policy-credits { color: var(--text-muted); font-size: 12px; font-weight: 600; }
+.table-action-btn {
+  background: none; border: 1px solid var(--border);
+  border-radius: 6px; padding: 5px 12px;
+  font-size: 12px; font-weight: 500;
+  color: var(--text-muted); cursor: pointer;
+  transition: all 0.2s;
+}
+.table-action-btn:hover { border-color: var(--orange); color: var(--orange); background: var(--orange-light); }
+
+/* Quick Actions Panel */
+.quick-actions { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.quick-action {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  cursor: pointer; transition: all 0.2s;
+  background: var(--card);
+}
+.quick-action:hover { border-color: var(--orange); background: var(--orange-light); }
+.quick-action.primary { background: var(--orange); border-color: var(--orange); }
+.quick-action.primary .qa-label { color: #fff; }
+.quick-action.primary .qa-desc { color: rgba(255,255,255,0.7); }
+.quick-action.primary .qa-icon-box { background: rgba(255,255,255,0.15); }
+.quick-action.primary:hover { background: var(--orange-dark); border-color: var(--orange-dark); }
+.qa-icon-box {
+  width: 38px; height: 38px; border-radius: 10px;
+  background: var(--orange-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.qa-text { flex: 1; }
+.qa-label { font-size: 13.5px; font-weight: 600; color: var(--text); }
+.qa-desc { font-size: 11.5px; color: var(--text-muted); margin-top: 1px; }
+.qa-arrow { color: var(--text-muted); font-size: 14px; }
+.quick-action.primary .qa-arrow { color: rgba(255,255,255,0.7); }
+
+/* Activity Feed */
+.activity-feed { padding: 0; }
+.activity-item {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--border);
+}
+.activity-item:last-child { border-bottom: none; }
+.activity-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: #fff; flex-shrink: 0;
+}
+.activity-avatar.sys { background: var(--muted); color: var(--text-muted); font-size: 14px; }
+.activity-content { flex: 1; }
+.activity-text { font-size: 13px; color: var(--text); line-height: 1.5; }
+.activity-text strong { color: var(--text); font-weight: 600; }
+.activity-time { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+/* Credit Usage Widget */
+.credit-widget {
+  background: linear-gradient(135deg, var(--text) 0%, #3d4a5f 100%);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  margin: 0 16px 16px;
+  position: relative; overflow: hidden;
+}
+.credit-widget::before {
+  content: '';
+  position: absolute; top: -20px; right: -20px;
+  width: 100px; height: 100px;
+  background: radial-gradient(circle, rgba(224,122,47,0.4), transparent);
+  border-radius: 50%;
+}
+.cw-label { color: rgba(255,255,255,0.5); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+.cw-value { color: #fff; font-size: 28px; font-weight: 800; margin-bottom: 2px; }
+.cw-sub { color: rgba(255,255,255,0.4); font-size: 11px; }
+.cw-bar-track { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin: 12px 0 8px; }
+.cw-bar-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--orange), #F5A623); width: 35%; }
+.cw-meta { display: flex; justify-content: space-between; font-size: 11px; }
+.cw-used { color: var(--orange); font-weight: 600; }
+.cw-total { color: rgba(255,255,255,0.3); }
+
+/* Empty state */
+.empty-state {
+  text-align: center; padding: 48px 24px;
+  color: var(--text-muted);
+}
+.empty-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.4; }
+.empty-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.empty-desc { font-size: 13px; line-height: 1.6; }
+.empty-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-top: 16px;
+  background: var(--orange); color: #fff;
+  border: none; border-radius: var(--radius);
+  padding: 10px 20px; font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+}
+.empty-btn:hover { background: var(--orange-dark); }
+
+/* ============================================================
+   VARIANT B — "My Policies" List View
+   ============================================================ */
+.policies-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 24px; flex-wrap: wrap; gap: 16px;
+}
+.policies-title h1 { font-size: 22px; font-weight: 800; color: var(--text); }
+.policies-title p { color: var(--text-muted); font-size: 13.5px; margin-top: 4px; }
+.header-actions { display: flex; align-items: center; gap: 10px; }
+.btn-secondary {
+  background: var(--card); border: 1.5px solid var(--border);
+  color: var(--text); border-radius: var(--radius);
+  padding: 10px 18px; font-size: 13px; font-weight: 600;
+  cursor: pointer; display: flex; align-items: center; gap: 7px;
+  transition: all 0.2s;
+}
+.btn-secondary:hover { border-color: var(--orange); color: var(--orange); }
+.btn-primary {
+  background: var(--orange); color: #fff;
+  border: none; border-radius: var(--radius);
+  padding: 10px 20px; font-size: 13px; font-weight: 600;
+  cursor: pointer; display: flex; align-items: center; gap: 8px;
+  transition: all 0.2s; box-shadow: 0 2px 8px rgba(224,122,47,0.3);
+}
+.btn-primary:hover { background: var(--orange-dark); transform: translateY(-1px); }
+
+.filter-bar {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 20px; flex-wrap: wrap;
+}
+.filter-search {
+  flex: 1; min-width: 220px;
+  display: flex; align-items: center; gap: 8px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 9px 14px;
+  color: var(--text-muted); font-size: 13px;
+}
+.filter-chip {
+  padding: 8px 14px; border-radius: 20px;
+  border: 1.5px solid var(--border); background: var(--card);
+  font-size: 12.5px; font-weight: 500; color: var(--text-muted);
+  cursor: pointer; transition: all 0.2s; white-space: nowrap;
+}
+.filter-chip.active { background: var(--orange-light); border-color: var(--orange); color: var(--orange); }
+.filter-chip:hover:not(.active) { border-color: var(--text-muted); color: var(--text); }
+
+.policy-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 18px;
+  transition: all 0.2s; cursor: pointer;
+}
+.policy-card:hover { box-shadow: var(--shadow-md); border-color: rgba(224,122,47,0.3); transform: translateY(-1px); }
+.policy-card-icon {
+  width: 48px; height: 48px; border-radius: 12px;
+  background: var(--orange-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+.policy-card-info { flex: 1; min-width: 0; }
+.policy-card-name { font-size: 14.5px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.policy-card-meta { display: flex; align-items: center; gap: 12px; }
+.policy-card-type { font-size: 12px; color: var(--text-muted); }
+.policy-card-date { font-size: 12px; color: var(--text-muted); }
+.policy-card-actions { display: flex; gap: 8px; }
+
+/* ============================================================
+   VARIANT C — New Policy Wizard Preview
+   ============================================================ */
+.wizard-progress-bar {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 32px;
+}
+.wizard-steps {
+  display: flex; align-items: center; justify-content: center; gap: 0;
+  max-width: 700px; margin: 0 auto;
+}
+.wizard-step {
+  display: flex; align-items: center; gap: 0; flex: 1;
+}
+.wizard-step-circle {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--card);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: var(--text-muted);
+  flex-shrink: 0; position: relative; z-index: 1;
+  transition: all 0.3s;
+}
+.wizard-step.done .wizard-step-circle { background: #E8F5E9; border-color: #2E7D32; color: #2E7D32; }
+.wizard-step.active .wizard-step-circle { background: var(--orange); border-color: var(--orange); color: #fff; box-shadow: 0 0 0 4px rgba(224,122,47,0.15); }
+.wizard-step-label { font-size: 11px; font-weight: 600; color: var(--text-muted); margin-top: 6px; white-space: nowrap; }
+.wizard-step.active .wizard-step-label { color: var(--orange); }
+.wizard-step.done .wizard-step-label { color: #2E7D32; }
+.wizard-step-wrapper { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+.wizard-connector { flex: 1; height: 2px; background: var(--border); margin: 0 0 16px; }
+.wizard-connector.done { background: #2E7D32; }
+.wizard-connector.active { background: var(--orange); }
+
+.wizard-body {
+  max-width: 640px; margin: 0 auto;
+  padding: 32px 24px;
+}
+.wizard-section-title { font-size: 18px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+.wizard-section-desc { font-size: 13.5px; color: var(--text-muted); margin-bottom: 28px; line-height: 1.6; }
+
+.form-group { margin-bottom: 20px; }
+.form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 7px; }
+.form-label .required { color: var(--orange); margin-left: 2px; }
+.form-input {
+  width: 100%; padding: 11px 14px;
+  border: 1.5px solid var(--border); border-radius: var(--radius);
+  font-size: 14px; color: var(--text);
+  background: var(--card); transition: border-color 0.2s;
+  outline: none;
+}
+.form-input:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(224,122,47,0.1); }
+.form-input::placeholder { color: var(--text-muted); }
+.form-select {
+  width: 100%; padding: 11px 14px;
+  border: 1.5px solid var(--border); border-radius: var(--radius);
+  font-size: 14px; color: var(--text);
+  background: var(--card); appearance: none;
+  cursor: pointer; outline: none;
+}
+
+.policy-type-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.policy-type-card {
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 14px;
+  cursor: pointer; transition: all 0.2s;
+  background: var(--card);
+  text-align: center;
+}
+.policy-type-card:hover { border-color: var(--orange); background: var(--orange-light); }
+.policy-type-card.selected { border-color: var(--orange); background: var(--orange-light); }
+.policy-type-card.selected .ptc-icon { transform: scale(1.05); }
+.ptc-icon { font-size: 28px; margin-bottom: 8px; display: block; }
+.ptc-name { font-size: 12.5px; font-weight: 700; color: var(--text); }
+.ptc-desc { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+.wizard-footer {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 20px 32px;
+  border-top: 1px solid var(--border);
+  background: var(--card);
+  position: sticky; bottom: 0;
+}
+.wizard-footer-left { color: var(--text-muted); font-size: 13px; display: flex; align-items: center; gap: 6px; }
+.wizard-footer-right { display: flex; gap: 10px; }
+
+/* Page visibility */
+.page-view { display: none; }
+.page-view.visible { display: flex; flex-direction: column; height: calc(100vh - 73px - 64px); overflow-y: auto; }
+
+/* Generating State */
+.generating-overlay {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 48px 32px;
+  text-align: center; max-width: 520px; margin: 48px auto;
+}
+.gen-spinner {
+  width: 64px; height: 64px; margin: 0 auto 20px;
+  position: relative;
+}
+.gen-spinner::before, .gen-spinner::after {
+  content: '';
+  position: absolute; inset: 0;
+  border: 3px solid transparent;
+  border-radius: 50%;
+}
+.gen-spinner::before { border-top-color: var(--orange); animation: spin 1s linear infinite; }
+.gen-spinner::after { border-right-color: var(--orange-light); animation: spin 1.5s linear infinite reverse; inset: 6px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.gen-icon { font-size: 28px; margin-bottom: 14px; }
+.gen-title { font-size: 18px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+.gen-desc { font-size: 13.5px; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px; }
+.gen-stages { text-align: left; margin-bottom: 24px; }
+.gen-stage {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+  font-size: 13px; color: var(--text-muted);
+}
+.gen-stage:last-child { border-bottom: none; }
+.gen-stage.done { color: #2E7D32; }
+.gen-stage.running { color: var(--orange); font-weight: 600; }
+.stage-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); flex-shrink: 0; }
+.gen-stage.done .stage-dot { background: #2E7D32; }
+.gen-stage.running .stage-dot { background: var(--orange); animation: pulse 1s ease-in-out infinite; }
+.gen-progress { height: 6px; background: var(--muted); border-radius: 3px; margin-bottom: 16px; overflow: hidden; }
+.gen-progress-fill {
+  height: 100%; background: linear-gradient(90deg, var(--orange), var(--orange-dark));
+  border-radius: 3px; width: 60%;
+  animation: progress-anim 2s ease-in-out infinite alternate;
+}
+@keyframes progress-anim { from { width: 50%; } to { width: 75%; } }
+.gen-eta { color: var(--text-muted); font-size: 12px; }
+
+</style>
+</head>
+<body>
+
+<!-- PAGE SELECTOR -->
+<div class="page-selector">
+  <span class="page-selector-title">Wathiqa Dashboard</span>
+  <button class="page-btn active" onclick="showPage('home')">🏠 Home Overview</button>
+  <button class="page-btn" onclick="showPage('policies')">📋 My Policies</button>
+  <button class="page-btn" onclick="showPage('wizard')">✨ New Policy</button>
+  <button class="page-btn" onclick="showPage('generating')">⚡ Generating</button>
+  <span class="variant-label">Dashboard Shell Mockup v1</span>
+</div>
+
+<!-- DASHBOARD WRAPPER -->
+<div class="dashboard-wrapper">
+
+  <!-- ========== SIDEBAR ========== -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-fallback">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAADFCAYAAAB6i6Q8AAA+JklEQVR42u29eZxcx3Xf+6u79zbTs2KwAyQBkAS4bwApSgIXYAhJkQkpspXF0ott2XqOHUuOE78kek5sJV6S6FlWLD3LiqVYki15ERXbFBZCICmKArjvK1Zim8FsPUtvd638Ud0zt7tvd9/u6ekeEOf7+TQw9966datOz9S5deqcUwBBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEEtO7kYgfWOnW0EQBEFccvAXbgf/8vWw7zOQW9Xp1hBEZ2GdbsClhQZJ0SAxG6qigoGBAwDjkMDAmAQwBoABnAMMYJAgAeAAPHCAu+CcL5QVFcDzHDiuDcdlkJSVcMyTne5sKJikQ5EBRdHEMQDGhCwkJoMxSXSTc3icg3MXXkEGhQsA5+Dg4C4XdTAATAJjDK7rgnPA4x486ODubEf7a+027oOh3opU/htsfXzUeW0Gkee9Dn8LBEEsa2Ld/di6fScgxkgdgLEEHx2A/J4PfRQ9Qxs63eU6SNiw7bbiQTV5RABEWOH/Ov0O+vivqR//V7+JoQ2bO9pr+6Px/9f5hZWe88/7H7M+EL1nBpDse3XYfR1tFkF0BJqBhITJmrx20zU7Y13Jj6mKvBrgMoT8OEdhsiFK+v4VEwxWOCi8dPP5C+I/VnxDB5jneXw6l80eGD37zt9qenQuNbo8ZyI33/NhjJw+trm7t/eXNE3bwgDZ12mG0t8txud7DF6cnrF5MXAwxsQ0RAiP+eoBB4fHkTNzucOTF0e+CUjTUyOnOtJv5yOJ/8AGun4HEgM37TE+Y34JI+n/n61NTLDXZyC/TLMR4vJB6XQDLhXWbtp6Z//Q0J/rRmSlT1sAWBgZq2vjoNLVr0fjib2qpm09e/ztfw/A6nTfgzh77I2hoXXrvxKLx++RJKlO6YKKLem7X8VWk0VpHW6864Oablxx+u03fhOA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" alt="Wathiqa" style="height:32px;width:auto;" />
+        <span class="logo-wordmark">Wathiqa</span>
+      </div>
+    </div>
+
+    <!-- Org switcher -->
+    <div class="sidebar-org">
+      <div class="org-avatar">SC</div>
+      <div class="org-info">
+        <div class="org-name">Smart Civic Solutions</div>
+        <div class="org-plan">Growth Plan</div>
+      </div>
+      <span class="org-chevron">⌄</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <div class="nav-item active" onclick="showPage('home')">
+        <span class="nav-icon">⊞</span>
+        Overview
+      </div>
+      <div class="nav-item" onclick="showPage('policies')">
+        <span class="nav-icon">📋</span>
+        My Policies
+        <span class="nav-badge">4</span>
+      </div>
+      <div class="nav-item" onclick="showPage('wizard')">
+        <span class="nav-icon">✨</span>
+        New Order
+      </div>
+
+      <div class="nav-section-label">Orders</div>
+      <div class="nav-item">
+        <span class="nav-icon">🕐</span>
+        Order History
+      </div>
+      <div class="nav-item">
+        <span class="nav-icon">📥</span>
+        Downloads
+        <span class="nav-badge gray">2</span>
+      </div>
+
+      <div class="nav-section-label">Account</div>
+      <div class="nav-item">
+        <span class="nav-icon">💳</span>
+        Credits & Billing
+      </div>
+      <div class="nav-item">
+        <span class="nav-icon">⚙</span>
+        Settings
+      </div>
+      <div class="nav-item">
+        <span class="nav-icon">❓</span>
+        Help & Support
+      </div>
+    </nav>
+
+    <!-- Credits widget -->
+    <div class="sidebar-credits">
+      <div class="credits-label">Policy Credits</div>
+      <div class="credits-amount">7</div>
+      <div class="credits-sublabel">Credits remaining</div>
+      <div class="credits-bar">
+        <div class="credits-bar-fill"></div>
+      </div>
+      <button class="credits-cta">+ Buy More Credits</button>
+    </div>
+
+    <!-- Bottom nav -->
+    <div class="sidebar-bottom">
+      <div class="nav-item">
+        <span class="nav-icon">👤</span>
+        Abdelfattah E.
+      </div>
+    </div>
+  </aside>
+
+  <!-- ========== PAGE: HOME OVERVIEW ========== -->
+  <div id="page-home" class="page-view visible">
+    <div class="topbar">
+      <div class="topbar-breadcrumb">Overview</div>
+      <div class="topbar-spacer"></div>
+      <div class="topbar-search">
+        <span>🔍</span> Search policies...
+        <span style="margin-left:auto;font-size:11px;opacity:0.5">⌘K</span>
+      </div>
+      <div class="topbar-icon-btn">
+        🔔
+        <div class="notif-dot"></div>
+      </div>
+      <div class="topbar-avatar">AE</div>
+    </div>
+
+    <div class="content-area">
+      <!-- Welcome Banner -->
+      <div class="welcome-banner">
+        <div class="welcome-text">
+          <div class="welcome-greeting">Good morning,</div>
+          <div class="welcome-name">Abdelfattah Elsharkawy 👋</div>
+          <div class="welcome-sub">Your organization has <strong style="color:rgba(255,255,255,0.9)">4 active policies</strong>. Start a new order in under 2 minutes.</div>
+        </div>
+        <button class="welcome-cta">
+          ✨ Generate New Policy
+        </button>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-icon orange">📋</div>
+          <div class="stat-data">
+            <div class="stat-label">Total Policies</div>
+            <div class="stat-value">12</div>
+            <div class="stat-delta up">↑ 3 this month</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green">✅</div>
+          <div class="stat-data">
+            <div class="stat-label">Ready to Use</div>
+            <div class="stat-value">9</div>
+            <div class="stat-delta neutral">75% of total</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon blue">💎</div>
+          <div class="stat-data">
+            <div class="stat-label">Credits Remaining</div>
+            <div class="stat-value">7</div>
+            <div class="stat-delta neutral">35% of bundle</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon purple">⚡</div>
+          <div class="stat-data">
+            <div class="stat-label">Avg. Generation</div>
+            <div class="stat-value">4m</div>
+            <div class="stat-delta up">↓ 30% faster</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Grid -->
+      <div class="dashboard-grid">
+
+        <!-- Recent Policies Table -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <div>
+              <div class="section-card-title">Recent Policies</div>
+              <div class="section-card-subtitle">Your latest generated documents</div>
+            </div>
+            <button class="section-card-action">View All →</button>
+          </div>
+          <table class="policy-table">
+            <thead>
+              <tr>
+                <th>Policy Name</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th>Credits</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="policy-title-cell">
+                    <div class="policy-icon">⚖️</div>
+                    <div>
+                      <div class="policy-name">Anti-Sexual Harassment Policy</div>
+                      <div class="policy-type">Workplace Safety · Arabic + English</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="status-badge completed"><span class="status-dot"></span>Ready</span></td>
+                <td><span class="policy-date">Mar 28, 2026</span></td>
+                <td><span class="policy-credits">1 credit</span></td>
+                <td><button class="table-action-btn">Download</button></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="policy-title-cell">
+                    <div class="policy-icon" style="background:#E3F2FD">📊</div>
+                    <div>
+                      <div class="policy-name">Non-Discrimination Policy</div>
+                      <div class="policy-type">Workplace Equality · Arabic</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="status-badge generating"><span class="status-dot"></span>Generating</span></td>
+                <td><span class="policy-date">Mar 29, 2026</span></td>
+                <td><span class="policy-credits">1 credit</span></td>
+                <td><button class="table-action-btn">View</button></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="policy-title-cell">
+                    <div class="policy-icon" style="background:#F3E5F5">🏛️</div>
+                    <div>
+                      <div class="policy-name">Retaliation Prevention Policy</div>
+                      <div class="policy-type">HR Governance · English</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="status-badge review"><span class="status-dot"></span>In Review</span></td>
+                <td><span class="policy-date">Mar 27, 2026</span></td>
+                <td><span class="policy-credits">1 credit</span></td>
+                <td><button class="table-action-btn">Edit</button></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="policy-title-cell">
+                    <div class="policy-icon" style="background:#E8F5E9">🌱</div>
+                    <div>
+                      <div class="policy-name">Parental Leave Policy</div>
+                      <div class="policy-type">Employee Benefits · Bilingual</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="status-badge completed"><span class="status-dot"></span>Ready</span></td>
+                <td><span class="policy-date">Mar 25, 2026</span></td>
+                <td><span class="policy-credits">1 credit</span></td>
+                <td><button class="table-action-btn">Download</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Right Column -->
+        <div style="display:flex;flex-direction:column;gap:16px;">
+
+          <!-- Quick Actions -->
+          <div class="section-card">
+            <div class="section-card-header">
+              <div class="section-card-title">Quick Actions</div>
+            </div>
+            <div class="quick-actions">
+              <div class="quick-action primary">
+                <div class="qa-icon-box">✨</div>
+                <div class="qa-text">
+                  <div class="qa-label">Generate New Policy</div>
+                  <div class="qa-desc">AI-powered, bilingual, compliant</div>
+                </div>
+                <span class="qa-arrow">→</span>
+              </div>
+              <div class="quick-action">
+                <div class="qa-icon-box">📤</div>
+                <div class="qa-text">
+                  <div class="qa-label">Upload Existing Policy</div>
+                  <div class="qa-desc">Review & enhance with AI</div>
+                </div>
+                <span class="qa-arrow">→</span>
+              </div>
+              <div class="quick-action">
+                <div class="qa-icon-box">💳</div>
+                <div class="qa-text">
+                  <div class="qa-label">Get More Credits</div>
+                  <div class="qa-desc">7 credits remaining</div>
+                </div>
+                <span class="qa-arrow">→</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Activity -->
+          <div class="section-card">
+            <div class="section-card-header">
+              <div class="section-card-title">Recent Activity</div>
+              <button class="section-card-action">All</button>
+            </div>
+            <div class="activity-feed">
+              <div class="activity-item">
+                <div class="activity-avatar sys">⚡</div>
+                <div class="activity-content">
+                  <div class="activity-text"><strong>Non-Discrimination Policy</strong> generation started</div>
+                  <div class="activity-time">2 minutes ago</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-avatar">AE</div>
+                <div class="activity-content">
+                  <div class="activity-text">You downloaded <strong>Anti-Harassment Policy</strong></div>
+                  <div class="activity-time">1 hour ago</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-avatar sys">✅</div>
+                <div class="activity-content">
+                  <div class="activity-text"><strong>Parental Leave Policy</strong> is ready</div>
+                  <div class="activity-time">2 days ago</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== PAGE: MY POLICIES ========== -->
+  <div id="page-policies" class="page-view">
+    <div class="topbar">
+      <div class="topbar-breadcrumb">My Policies</div>
+      <div class="topbar-spacer"></div>
+      <div class="topbar-search">🔍 Search policies...</div>
+      <div class="topbar-icon-btn">🔔<div class="notif-dot"></div></div>
+      <div class="topbar-avatar">AE</div>
+    </div>
+
+    <div class="content-area">
+      <div class="policies-header">
+        <div class="policies-title">
+          <h1>My Policies</h1>
+          <p>12 policies generated · 9 ready to download</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn-secondary">⬇ Export All</button>
+          <button class="btn-primary">✨ New Policy</button>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <div class="filter-search">🔍 <span>Search by name, type, language...</span></div>
+        <div class="filter-chip active">All (12)</div>
+        <div class="filter-chip">Ready (9)</div>
+        <div class="filter-chip">In Progress (2)</div>
+        <div class="filter-chip">Drafts (1)</div>
+      </div>
+
+      <div class="policy-card">
+        <div class="policy-card-icon">⚖️</div>
+        <div class="policy-card-info">
+          <div class="policy-card-name">Anti-Sexual Harassment Policy — 2026</div>
+          <div class="policy-card-meta">
+            <span class="policy-card-type">Workplace Safety</span>
+            <span class="policy-card-date">•</span>
+            <span class="policy-card-date">Arabic + English</span>
+            <span class="policy-card-date">•</span>
+            <span class="policy-card-date">Mar 28, 2026</span>
+          </div>
+        </div>
+        <span class="status-badge completed"><span class="status-dot"></span>Ready</span>
+        <div class="policy-card-actions">
+          <button class="btn-secondary" style="padding:8px 14px;font-size:12px;">Preview</button>
+          <button class="btn-primary" style="padding:8px 14px;font-size:12px;">⬇ Download</button>
+        </div>
+      </div>
+
+      <div class="policy-card">
+        <div class="policy-card-icon" style="background:#E3F2FD">📊</div>
+        <div class="policy-card-info">
+          <div class="policy-card-name">Non-Discrimination Policy 2026</div>
+          <div class="policy-card-meta">
+            <span class="policy-card-type">Workplace Equality</span>
+            <span class="policy-card-date">•</span>
+            <span class="policy-card-date">Arabic</span>
+            <span class="policy-card-date">•</span>
+            <span class="policy-card-date">Mar 29, 2026</span>
+          </div>
+        </div>
+        <span class="status-badge generating"><span class="status-dot"></span>Generating</span>
+        <div class="policy-card-actions">
+          <button class="btn-secondary" style="padding:8px 14px;font-size:12px;">View Progress</button>
+        </div>
+      </div>
+
+      <div class="policy-card">
+        <div class="policy-card-icon" style="background:#F3E5F5">🏛️</div>
+        <div class="policy-card-info">
+          <div class="policy-card-name">Retaliation Prevention Policy</div>
+          <div class="policy-card-meta">
+            <span class="policy-card-type">HR Governance</span>
+            <span class="policy-card-date">•</span>
+            <span class="policy-card-date">English</span>
+            <span class="policy-card-date">•</span>
+            <span class="policy-card-date">Mar 27, 2026</span>
+          </div>
+        </div>
+        <span class="status-badge review"><span class="status-dot"></span>In Review</span>
+        <div class="policy-card-actions">
+          <button class="btn-secondary" style="padding:8px 14px;font-size:12px;">Edit</button>
+          <button class="btn-primary" style="padding:8px 14px;font-size:12px;">Approve</button>
+        </div>
+      </div>
+
+      <div class="policy-card">
+        <div class="policy-card-icon" style="background:#E8F5E9">🌱</div>
+        <div class="policy-card-info">
+          <div class="policy-card-name">Parental Leave & Family Support Policy</div>
+          <div class="policy-card-meta">
+            <span class="policy-card-type">Employee Benefits</span>
+            <span class="policy-card-date">•</span>
+            <span class="policy-card-date">Bilingual</span>
+            <span class="policy-card-date">•</span>
+            <span class="policy-card-date">Mar 25, 2026</span>
+          </div>
+        </div>
+        <span class="status-badge completed"><span class="status-dot"></span>Ready</span>
+        <div class="policy-card-actions">
+          <button class="btn-secondary" style="padding:8px 14px;font-size:12px;">Preview</button>
+          <button class="btn-primary" style="padding:8px 14px;font-size:12px;">⬇ Download</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========== PAGE: NEW POLICY WIZARD ========== -->
+  <div id="page-wizard" class="page-view" style="overflow:hidden;">
+    <div class="topbar">
+      <div class="topbar-breadcrumb">New Policy <span class="sep">›</span> <span>Organisation Details</span></div>
+      <div class="topbar-spacer"></div>
+      <button class="btn-secondary" style="padding:8px 14px;font-size:12px;">✕ Cancel</button>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="wizard-progress-bar">
+      <div class="wizard-steps">
+        <div class="wizard-step done">
+          <div class="wizard-step-wrapper">
+            <div class="wizard-step-circle">✓</div>
+            <div class="wizard-step-label">Policy Type</div>
+          </div>
+        </div>
+        <div class="wizard-connector done"></div>
+        <div class="wizard-step active">
+          <div class="wizard-step-wrapper">
+            <div class="wizard-step-circle">2</div>
+            <div class="wizard-step-label">Organisation</div>
+          </div>
+        </div>
+        <div class="wizard-connector"></div>
+        <div class="wizard-step">
+          <div class="wizard-step-wrapper">
+            <div class="wizard-step-circle">3</div>
+            <div class="wizard-step-label">Context</div>
+          </div>
+        </div>
+        <div class="wizard-connector"></div>
+        <div class="wizard-step">
+          <div class="wizard-step-wrapper">
+            <div class="wizard-step-circle">4</div>
+            <div class="wizard-step-label">Preferences</div>
+          </div>
+        </div>
+        <div class="wizard-connector"></div>
+        <div class="wizard-step">
+          <div class="wizard-step-wrapper">
+            <div class="wizard-step-circle">5</div>
+            <div class="wizard-step-label">Language</div>
+          </div>
+        </div>
+        <div class="wizard-connector"></div>
+        <div class="wizard-step">
+          <div class="wizard-step-wrapper">
+            <div class="wizard-step-circle">6</div>
+            <div class="wizard-step-label">Review</div>
+          </div>
+        </div>
+        <div class="wizard-connector"></div>
+        <div class="wizard-step">
+          <div class="wizard-step-wrapper">
+            <div class="wizard-step-circle">7</div>
+            <div class="wizard-step-label">Generate</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wizard Body -->
+    <div style="flex:1;overflow-y:auto;">
+      <div class="wizard-body">
+        <div class="wizard-section-title">Tell us about your organisation</div>
+        <div class="wizard-section-desc">This information helps Wathiqa tailor the policy to your context, sector, and applicable regulations.</div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div class="form-group">
+            <label class="form-label">Organisation Name <span class="required">*</span></label>
+            <input type="text" class="form-input" placeholder="e.g. Smart Civic Solutions" value="Smart Civic Solutions">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Organisation Size <span class="required">*</span></label>
+            <select class="form-select">
+              <option selected>11–50 employees</option>
+              <option>1–10 employees</option>
+              <option>51–200 employees</option>
+              <option>201–500 employees</option>
+              <option>500+ employees</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Sector <span class="required">*</span></label>
+          <select class="form-select">
+            <option selected>Civil Society / NGO</option>
+            <option>Private Sector / Corporate</option>
+            <option>Government / Public Sector</option>
+            <option>International Organisation</option>
+            <option>Education</option>
+            <option>Healthcare</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Country of Operation <span class="required">*</span></label>
+          <input type="text" class="form-input" placeholder="e.g. Egypt, Spain, Regional" value="Egypt">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Relevant Legislation / Standards</label>
+          <input type="text" class="form-input" placeholder="e.g. Egyptian Labour Law, ILO Conventions, CEDAW...">
+          <div style="font-size:11.5px;color:var(--text-muted);margin-top:5px;">Leave blank to auto-detect based on country and sector.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wizard-footer">
+      <div class="wizard-footer-left">💎 This order will use <strong style="color:var(--orange)">1 credit</strong></div>
+      <div class="wizard-footer-right">
+        <button class="btn-secondary">← Back</button>
+        <button class="btn-primary">Next → Context</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== PAGE: GENERATING ========== -->
+  <div id="page-generating" class="page-view">
+    <div class="topbar">
+      <div class="topbar-breadcrumb">Order <span class="sep">#</span><span>WTQ-2026-042</span> <span class="sep">›</span> Generating</div>
+      <div class="topbar-spacer"></div>
+      <div class="topbar-avatar">AE</div>
+    </div>
+
+    <div class="content-area" style="display:flex;align-items:flex-start;justify-content:center;">
+      <div style="width:100%;max-width:640px;">
+        <div class="generating-overlay">
+          <div class="gen-spinner"></div>
+          <div class="gen-icon">⚖️</div>
+          <div class="gen-title">Generating Your Policy</div>
+          <div class="gen-desc">Wathiqa AI is crafting your <strong>Anti-Sexual Harassment Policy</strong> for Smart Civic Solutions. This usually takes 3–6 minutes.</div>
+
+          <div class="gen-stages">
+            <div class="gen-stage done"><div class="stage-dot"></div>✓ &nbsp;Analysing organisation context</div>
+            <div class="gen-stage done"><div class="stage-dot"></div>✓ &nbsp;Mapping applicable regulations</div>
+            <div class="gen-stage running"><div class="stage-dot"></div>⚡ Generating policy sections</div>
+            <div class="gen-stage"><div class="stage-dot"></div>Quality review & compliance check</div>
+            <div class="gen-stage"><div class="stage-dot"></div>Arabic localisation</div>
+            <div class="gen-stage"><div class="stage-dot"></div>Building final document</div>
+          </div>
+
+          <div class="gen-progress"><div class="gen-progress-fill"></div></div>
+          <div class="gen-eta">⏱ Estimated time remaining: ~3 minutes</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end dashboard-wrapper -->
+
+<script>
+function showPage(page) {
+  // hide all
+  document.querySelectorAll('.page-view').forEach(el => el.classList.remove('visible'));
+  document.querySelectorAll('.page-btn').forEach(el => el.classList.remove('active'));
+  // show target
+  document.getElementById('page-' + page).classList.add('visible');
+  // active button
+  const btns = document.querySelectorAll('.page-btn');
+  const pageIndex = { home: 0, policies: 1, wizard: 2, generating: 3 };
+  btns[pageIndex[page]].classList.add('active');
+  // sync sidebar
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  if (page === 'home') document.querySelector('.nav-item').classList.add('active');
+}
+</script>
+
+</body>
+</html>

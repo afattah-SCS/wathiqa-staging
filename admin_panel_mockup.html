@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wathiqa — Admin Panel Mockup</title>
+<style>
+/* ── Brand Tokens ── */
+:root {
+  --orange: #E07A2F;
+  --orange-dark: #BF5A13;
+  --orange-light: #FFF3E0;
+  --orange-mid: rgba(224,122,47,0.15);
+  --bg: #FCFCFC;
+  --card: #FFFFFF;
+  --text: #293040;
+  --text-muted: #737D8C;
+  --border: #DEE2E8;
+  --sidebar-bg: #2E2E2E;
+  --sidebar-fg: #F5F5F5;
+  --sidebar-active: #E07830;
+  --sidebar-hover: #3D3D3D;
+  --radius: 10px;
+  --shadow: 0 1px 4px rgba(0,0,0,0.07);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
+  --red: #E02424; --red-light: #FEE2E2;
+  --green: #16A34A; --green-light: #DCFCE7;
+  --blue: #2563EB; --blue-light: #DBEAFE;
+  --yellow: #D97706; --yellow-light: #FEF3C7;
+  --purple: #7C3AED; --purple-light: #EDE9FE;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; font-size: 14px; }
+
+/* ── VARIANT BAR ── */
+#variant-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+  background: #1a1a2e; color: #fff; display: flex; align-items: center;
+  gap: 6px; padding: 8px 16px; font-size: 12px; font-weight: 500;
+}
+#variant-bar span { color: #aaa; margin-right: 6px; }
+.vbtn {
+  padding: 4px 12px; border-radius: 20px; border: none; cursor: pointer;
+  background: #333; color: #ccc; font-size: 11px; font-weight: 600;
+  transition: all 0.2s;
+}
+.vbtn.active { background: var(--orange); color: #fff; }
+.vbtn:hover:not(.active) { background: #555; }
+
+/* ── LAYOUT ── */
+#shell { display: flex; width: 100%; height: 100vh; padding-top: 38px; }
+
+/* ── SIDEBAR ── */
+#sidebar {
+  width: 220px; flex-shrink: 0; background: var(--sidebar-bg);
+  display: flex; flex-direction: column; height: 100%; overflow-y: auto;
+}
+.sb-logo {
+  padding: 18px 16px 14px; border-bottom: 1px solid rgba(255,255,255,0.08);
+  display: flex; align-items: center; gap: 10px;
+}
+.sb-logo-mark {
+  width: 30px; height: 30px; background: var(--orange); border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; color: #fff; font-size: 14px; letter-spacing: -1px;
+  position: relative; overflow: hidden;
+}
+.sb-logo-mark::after {
+  content: ''; position: absolute; bottom: 0; right: 0;
+  width: 0; height: 0; border-left: 10px solid transparent;
+  border-bottom: 10px solid rgba(0,0,0,0.2);
+}
+.sb-logo-text { color: var(--sidebar-fg); font-weight: 700; font-size: 15px; }
+.sb-logo-badge {
+  margin-left: auto; background: var(--red); color: #fff;
+  font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 20px;
+}
+.sb-section-label {
+  padding: 14px 16px 5px; font-size: 10px; font-weight: 700;
+  color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.8px;
+}
+.sb-item {
+  display: flex; align-items: center; gap: 10px; padding: 9px 16px;
+  color: rgba(255,255,255,0.65); cursor: pointer; border-radius: 0;
+  transition: all 0.15s; font-size: 13px; font-weight: 500; border: none;
+  background: none; width: 100%; text-align: left;
+}
+.sb-item:hover { background: var(--sidebar-hover); color: var(--sidebar-fg); }
+.sb-item.active { background: rgba(224,120,48,0.18); color: var(--sidebar-active); border-right: 3px solid var(--sidebar-active); }
+.sb-item .ico { font-size: 16px; width: 20px; text-align: center; }
+.sb-badge { margin-left: auto; background: var(--red); color: #fff; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 20px; min-width: 18px; text-align: center; }
+.sb-badge.warn { background: var(--yellow); }
+.sb-spacer { flex: 1; }
+.sb-bottom { padding: 12px 16px; border-top: 1px solid rgba(255,255,255,0.08); }
+.sb-user { display: flex; align-items: center; gap: 9px; }
+.sb-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--orange); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 12px; }
+.sb-user-name { color: var(--sidebar-fg); font-size: 12px; font-weight: 600; }
+.sb-user-role { color: rgba(255,255,255,0.4); font-size: 10px; }
+
+/* ── MAIN AREA ── */
+#main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+#topbar {
+  background: var(--card); border-bottom: 1px solid var(--border);
+  padding: 0 24px; height: 52px; display: flex; align-items: center; gap: 16px; flex-shrink: 0;
+}
+.tb-breadcrumb { font-size: 12px; color: var(--text-muted); }
+.tb-breadcrumb strong { color: var(--text); }
+.tb-spacer { flex: 1; }
+.tb-search {
+  display: flex; align-items: center; gap: 8px; background: var(--bg);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 6px 12px; width: 220px;
+}
+.tb-search input { border: none; background: none; outline: none; font-size: 13px; color: var(--text); width: 100%; }
+.tb-search input::placeholder { color: var(--text-muted); }
+.tb-btn {
+  padding: 7px 14px; border-radius: var(--radius); border: none; cursor: pointer;
+  font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px;
+  background: var(--orange); color: #fff; transition: all 0.2s;
+}
+.tb-btn:hover { background: var(--orange-dark); }
+.tb-btn.ghost { background: none; border: 1px solid var(--border); color: var(--text); }
+.tb-icon-btn { width: 34px; height: 34px; border-radius: var(--radius); border: 1px solid var(--border); background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--text-muted); }
+.tb-icon-btn:hover { background: var(--bg); }
+.notif-dot { width: 7px; height: 7px; background: var(--red); border-radius: 50%; position: absolute; top: 5px; right: 5px; }
+.tb-icon-btn-wrap { position: relative; }
+
+#content { flex: 1; overflow-y: auto; padding: 24px; }
+
+/* ── PAGES ── */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ── STAT CARDS ── */
+.stats-row { display: grid; grid-template-columns: repeat(5,1fr); gap: 14px; margin-bottom: 22px; }
+.stat-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 16px; display: flex; flex-direction: column; gap: 8px; position: relative; overflow: hidden;
+}
+.stat-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--accent-color, var(--orange));
+}
+.stat-label { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-value { font-size: 26px; font-weight: 700; color: var(--text); line-height: 1; }
+.stat-sub { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
+.stat-up { color: var(--green); } .stat-down { color: var(--red); }
+.stat-icon { position: absolute; right: 14px; top: 14px; font-size: 22px; opacity: 0.12; }
+
+/* ── CHARTS ── */
+.charts-row { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; margin-bottom: 22px; }
+.chart-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; }
+.chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.chart-title { font-size: 14px; font-weight: 600; }
+.chart-legend { display: flex; gap: 12px; font-size: 11px; color: var(--text-muted); }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+.bar-chart { display: flex; align-items: flex-end; gap: 6px; height: 120px; padding-top: 10px; }
+.bar-group { display: flex; gap: 2px; align-items: flex-end; flex: 1; }
+.bar { border-radius: 4px 4px 0 0; min-width: 12px; transition: opacity 0.2s; cursor: pointer; }
+.bar:hover { opacity: 0.8; }
+.bar-labels { display: flex; justify-content: space-between; margin-top: 6px; }
+.bar-label { font-size: 10px; color: var(--text-muted); text-align: center; flex: 1; }
+.donut-wrap { display: flex; align-items: center; justify-content: center; gap: 20px; height: 140px; }
+.donut-legend { display: flex; flex-direction: column; gap: 8px; }
+.dl-item { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.dl-swatch { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+.dl-label { color: var(--text-muted); } .dl-val { font-weight: 700; margin-left: 4px; }
+
+/* ── MINI SPARKLINE ── */
+.sparkline { display: flex; align-items: flex-end; gap: 2px; height: 30px; }
+.spark-bar { background: var(--orange-mid); border-radius: 2px; flex: 1; min-width: 4px; }
+.spark-bar.hi { background: var(--orange); }
+
+/* ── TABLES ── */
+.table-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.table-header { padding: 14px 18px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); }
+.table-title { font-size: 14px; font-weight: 600; flex: 1; }
+.tbl-filter { display: flex; gap: 6px; }
+.filter-chip {
+  padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border);
+  font-size: 11px; font-weight: 600; cursor: pointer; background: none; color: var(--text-muted);
+  transition: all 0.15s;
+}
+.filter-chip.active { background: var(--orange-light); border-color: var(--orange); color: var(--orange); }
+.filter-chip:hover:not(.active) { background: var(--bg); }
+
+table { width: 100%; border-collapse: collapse; }
+thead th {
+  padding: 10px 14px; font-size: 11px; font-weight: 700; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.5px; text-align: left;
+  background: #FAFAFA; border-bottom: 1px solid var(--border);
+}
+tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; cursor: pointer; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: #FAFBFC; }
+td { padding: 11px 14px; font-size: 13px; vertical-align: middle; }
+
+/* ── BADGES ── */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 600;
+}
+.badge.green { background: var(--green-light); color: var(--green); }
+.badge.red { background: var(--red-light); color: var(--red); }
+.badge.blue { background: var(--blue-light); color: var(--blue); }
+.badge.yellow { background: var(--yellow-light); color: var(--yellow); }
+.badge.purple { background: var(--purple-light); color: var(--purple); }
+.badge.gray { background: #F3F4F6; color: #6B7280; }
+.badge-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.badge-dot.pulse { animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* ── AVATAR ── */
+.avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--orange-light); color: var(--orange); font-weight: 700; font-size: 11px; display: flex; align-items: center; justify-content: center; }
+.avatar.sm { width: 24px; height: 24px; font-size: 9px; }
+.avatar-row { display: flex; align-items: center; gap: 9px; }
+.avatar-info { line-height: 1.3; }
+.avatar-name { font-weight: 600; font-size: 13px; }
+.avatar-email { font-size: 11px; color: var(--text-muted); }
+
+/* ── ACTION BTNS ── */
+.action-btn {
+  padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border);
+  font-size: 11px; font-weight: 600; cursor: pointer; background: none; color: var(--text-muted);
+  transition: all 0.15s;
+}
+.action-btn:hover { background: var(--bg); color: var(--text); }
+.action-btn.primary { background: var(--orange); color: #fff; border-color: var(--orange); }
+.action-btn.primary:hover { background: var(--orange-dark); }
+.action-btn.danger { color: var(--red); border-color: var(--red-light); }
+.action-btn.danger:hover { background: var(--red-light); }
+
+/* ── CREDIT DISPLAY ── */
+.credit-pill { display: inline-flex; align-items: center; gap: 5px; background: var(--orange-light); color: var(--orange-dark); border-radius: 20px; padding: 3px 9px; font-size: 12px; font-weight: 700; }
+
+/* ── TWO-COL ── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; }
+.three-col { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 14px; margin-bottom: 22px; }
+
+/* ── ERROR / DLQ ── */
+.error-item {
+  padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 14px;
+}
+.error-item:last-child { border-bottom: none; }
+.error-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--red-light); color: var(--red); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.error-icon.warn { background: var(--yellow-light); color: var(--yellow); }
+.error-body { flex: 1; min-width: 0; }
+.error-title { font-weight: 600; font-size: 13px; margin-bottom: 3px; }
+.error-meta { font-size: 11px; color: var(--text-muted); display: flex; gap: 10px; flex-wrap: wrap; }
+.error-meta code { background: #F3F4F6; padding: 1px 5px; border-radius: 4px; font-size: 10px; color: #374151; }
+.error-actions { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+
+/* ── TIMELINE ── */
+.timeline { padding: 4px 0; }
+.tl-item { display: flex; gap: 12px; padding: 8px 0; font-size: 12px; }
+.tl-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--orange); margin-top: 4px; flex-shrink: 0; }
+.tl-dot.gray { background: var(--border); }
+.tl-dot.red { background: var(--red); }
+.tl-dot.green { background: var(--green); }
+.tl-body { flex: 1; }
+.tl-text { color: var(--text); }
+.tl-time { color: var(--text-muted); font-size: 11px; margin-top: 1px; }
+
+/* ── KPI RING ── */
+.ring-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.ring-label { font-size: 11px; color: var(--text-muted); font-weight: 600; text-align: center; }
+.ring-val { font-size: 18px; font-weight: 700; }
+
+/* ── PAGE HEADER ── */
+.page-header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+.page-title { font-size: 18px; font-weight: 700; }
+.page-sub { font-size: 13px; color: var(--text-muted); margin-top: 1px; }
+.page-actions { margin-left: auto; display: flex; gap: 8px; }
+
+/* ── PROGRESS BAR ── */
+.progress-wrap { background: var(--border); border-radius: 20px; height: 6px; overflow: hidden; }
+.progress-bar { height: 100%; border-radius: 20px; transition: width 0.3s; }
+
+/* ── TAGS ── */
+.tag { background: var(--orange-light); color: var(--orange-dark); padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 700; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 20px; }
+</style>
+</head>
+<body>
+
+<!-- Variant / Section Switcher -->
+<div id="variant-bar">
+  <span>Admin Panel Sections:</span>
+  <button class="vbtn active" onclick="showPage('overview')">📊 Overview</button>
+  <button class="vbtn" onclick="showPage('users')">👥 Users</button>
+  <button class="vbtn" onclick="showPage('credits')">💳 Credits</button>
+  <button class="vbtn" onclick="showPage('orders')">📋 Orders</button>
+  <button class="vbtn" onclick="showPage('errors')">🚨 Error DLQ</button>
+</div>
+
+<div id="shell">
+  <!-- SIDEBAR -->
+  <nav id="sidebar">
+    <div class="sb-logo">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAADFCAYAAAB6i6Q8AAA+JklEQVR42u29eZxcx3Xf+6u79zbTs2KwAyQBkAS4bwApSgIXYAhJkQkpspXF0ott2XqOHUuOE78kek5sJV6S6FlWLD3LiqVYki15ERXbFBZCICmKArjvK1Zim8FsPUtvd638Ud0zt7tvd9/u6ekeEOf7+TQw9966datOz9S5deqcUwBBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEEtO7kYgfWOnW0EQBEFccvAXbgf/8vWw7zOQW9Xp1hBEZ2GdbsClhQZJ0SAxG6qigoGBAwDjkMDAmAQwBoABnAMMYJAgAeAAPHCAu+CcL5QVFcDzHDiuDcdlkJSVcMyTne5sKJikQ5EBRdHEMQDGhCwkJoMxSXSTc3icg3MXXkEGhQsA5+Dg4C4XdTAATAJjDK7rgnPA4x486ODubEf7a+027oOh3opU/htsfXzUeW0Gkee9Dn8LBEEsa2Ld/di6fScgxkgdgLEEHx2A/J4PfRQ9Qxs63eU6SNiw7bbiQTV5RABEWOH/Ov0O+vivqR//V7+JoQ2bO9pr+6Px/9f5hZWe88/7H7M+EL1nBpDse3XYfR1tFkF0BJqBhITJmrx20zU7Y13Jj6mKvBrgMoT8OEdhsiFK+v4VEwxWOCi8dPP5C+I/VnxDB5jneXw6l80eGD37zt9qenQuNbo8ZyI33/NhjJw+trm7t/eXNE3bwgDZ12mG0t8txud7DF6cnrF5MXAwxsQ0RAiP+eoBB4fHkTNzucOTF0e+CUjTUyOnOtJv5yOJ/8AGun4HEgM37TE+Y34JI+n/n61NTLDXZyC/TLMR4vJB6XQDLhXWbtp6Z//Q0J/rRmSlT1sAWBgZq2vjoNLVr0fjib2qpm09e/ztfw/A6nTfgzh77I2hoXXrvxKLx++RJKlO6YKKLem7X8VWk0VpHW6864Oablxx+u03fhOA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" alt="Wathiqa" style="height:32px;width:auto;" />
+      <div class="sb-logo-text">Wathiqa</div>
+      <div class="sb-logo-badge">ADMIN</div>
+    </div>
+
+    <div class="sb-section-label">Overview</div>
+    <button class="sb-item active" id="sb-overview" onclick="showPage('overview')">
+      <span class="ico">📊</span> Dashboard
+    </button>
+    <button class="sb-item" id="sb-analytics" onclick="showPage('overview')">
+      <span class="ico">📈</span> Analytics
+    </button>
+
+    <div class="sb-section-label">Management</div>
+    <button class="sb-item" id="sb-users" onclick="showPage('users')">
+      <span class="ico">👥</span> Users
+      <span class="sb-badge">142</span>
+    </button>
+    <button class="sb-item" id="sb-credits" onclick="showPage('credits')">
+      <span class="ico">💳</span> Credits
+    </button>
+    <button class="sb-item" id="sb-orders" onclick="showPage('orders')">
+      <span class="ico">📋</span> Orders
+      <span class="sb-badge" style="background:#2563EB">8</span>
+    </button>
+
+    <div class="sb-section-label">System</div>
+    <button class="sb-item" id="sb-errors" onclick="showPage('errors')">
+      <span class="ico">🚨</span> Error Queue
+      <span class="sb-badge">5</span>
+    </button>
+    <button class="sb-item" onclick="showPage('overview')">
+      <span class="ico">🔑</span> API Keys
+    </button>
+    <button class="sb-item" onclick="showPage('overview')">
+      <span class="ico">📢</span> Notifications
+    </button>
+    <button class="sb-item" onclick="showPage('overview')">
+      <span class="ico">🗃️</span> Audit Log
+    </button>
+
+    <div class="sb-spacer"></div>
+    <div class="sb-bottom">
+      <div class="sb-user">
+        <div class="sb-avatar">AE</div>
+        <div>
+          <div class="sb-user-name">Abdelfattah</div>
+          <div class="sb-user-role">Super Admin</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <div id="main">
+    <!-- Topbar -->
+    <div id="topbar">
+      <div class="tb-breadcrumb" id="breadcrumb">Admin / <strong>Dashboard</strong></div>
+      <div class="tb-spacer"></div>
+      <div class="tb-search">
+        <span style="color:var(--text-muted);font-size:14px">🔍</span>
+        <input type="text" placeholder="Search users, orders, tasks…">
+      </div>
+      <div class="tb-icon-btn-wrap">
+        <button class="tb-icon-btn">🔔</button>
+        <div class="notif-dot"></div>
+      </div>
+      <button class="tb-icon-btn">⚙️</button>
+      <button class="tb-btn">+ New Action</button>
+    </div>
+
+    <div id="content">
+
+      <!-- ═══════════════════════════════════════
+           PAGE 1: OVERVIEW / ANALYTICS
+      ═══════════════════════════════════════ -->
+      <div class="page active" id="page-overview">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Platform Overview</div>
+            <div class="page-sub">All metrics · Last 30 days</div>
+          </div>
+          <div class="page-actions">
+            <button class="tb-btn ghost">📅 Mar 2026</button>
+            <button class="tb-btn ghost">⬇ Export</button>
+          </div>
+        </div>
+
+        <!-- KPI Stats Row -->
+        <div class="stats-row">
+          <div class="stat-card" style="--accent-color:#E07A2F">
+            <div class="stat-icon">👥</div>
+            <div class="stat-label">Total Users</div>
+            <div class="stat-value">142</div>
+            <div class="stat-sub"><span class="stat-up">↑ 18</span> this month</div>
+            <div class="sparkline">
+              <div class="spark-bar" style="height:40%"></div><div class="spark-bar" style="height:55%"></div>
+              <div class="spark-bar" style="height:45%"></div><div class="spark-bar" style="height:70%"></div>
+              <div class="spark-bar" style="height:60%"></div><div class="spark-bar" style="height:80%"></div>
+              <div class="spark-bar hi" style="height:100%"></div>
+            </div>
+          </div>
+          <div class="stat-card" style="--accent-color:#2563EB">
+            <div class="stat-icon">📋</div>
+            <div class="stat-label">Orders (30d)</div>
+            <div class="stat-value">284</div>
+            <div class="stat-sub"><span class="stat-up">↑ 34%</span> vs last month</div>
+            <div class="sparkline">
+              <div class="spark-bar" style="height:30%"></div><div class="spark-bar" style="height:50%"></div>
+              <div class="spark-bar" style="height:65%"></div><div class="spark-bar" style="height:55%"></div>
+              <div class="spark-bar" style="height:75%"></div><div class="spark-bar" style="height:85%"></div>
+              <div class="spark-bar hi" style="height:100%"></div>
+            </div>
+          </div>
+          <div class="stat-card" style="--accent-color:#16A34A">
+            <div class="stat-icon">💰</div>
+            <div class="stat-label">Revenue (30d)</div>
+            <div class="stat-value">$2,840</div>
+            <div class="stat-sub"><span class="stat-up">↑ $620</span> this month</div>
+            <div class="sparkline">
+              <div class="spark-bar" style="height:25%"></div><div class="spark-bar" style="height:40%"></div>
+              <div class="spark-bar" style="height:60%"></div><div class="spark-bar" style="height:50%"></div>
+              <div class="spark-bar" style="height:70%"></div><div class="spark-bar" style="height:90%"></div>
+              <div class="spark-bar hi" style="height:100%"></div>
+            </div>
+          </div>
+          <div class="stat-card" style="--accent-color:#7C3AED">
+            <div class="stat-icon">⚡</div>
+            <div class="stat-label">Policies Generated</div>
+            <div class="stat-value">1,847</div>
+            <div class="stat-sub"><span class="stat-up">↑ 22%</span> this week</div>
+            <div class="sparkline">
+              <div class="spark-bar" style="height:35%"></div><div class="spark-bar" style="height:60%"></div>
+              <div class="spark-bar" style="height:50%"></div><div class="spark-bar" style="height:80%"></div>
+              <div class="spark-bar" style="height:65%"></div><div class="spark-bar" style="height:90%"></div>
+              <div class="spark-bar hi" style="height:100%"></div>
+            </div>
+          </div>
+          <div class="stat-card" style="--accent-color:#E02424">
+            <div class="stat-icon">🚨</div>
+            <div class="stat-label">Error Queue</div>
+            <div class="stat-value">5</div>
+            <div class="stat-sub"><span class="stat-down">↑ 3</span> new today</div>
+            <div style="margin-top:4px">
+              <div class="progress-wrap"><div class="progress-bar" style="width:10%;background:var(--red)"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="charts-row">
+          <!-- Bar chart: Generations + Signups -->
+          <div class="chart-card">
+            <div class="chart-header">
+              <div class="chart-title">Generations & Signups — Daily (Mar 2026)</div>
+              <div class="chart-legend">
+                <span><span class="legend-dot" style="background:var(--orange)"></span>Generations</span>
+                <span><span class="legend-dot" style="background:#2563EB"></span>Signups</span>
+              </div>
+            </div>
+            <div class="bar-chart">
+              <div class="bar-group"><div class="bar" style="height:55%;background:var(--orange);opacity:0.85" title="60 gen"></div><div class="bar" style="height:20%;background:#2563EB;opacity:0.7" title="2 sig"></div></div>
+              <div class="bar-group"><div class="bar" style="height:65%;background:var(--orange);opacity:0.85"></div><div class="bar" style="height:35%;background:#2563EB;opacity:0.7"></div></div>
+              <div class="bar-group"><div class="bar" style="height:45%;background:var(--orange);opacity:0.85"></div><div class="bar" style="height:15%;background:#2563EB;opacity:0.7"></div></div>
+              <div class="bar-group"><div class="bar" style="height:80%;background:var(--orange);opacity:0.85"></div><div class="bar" style="height:45%;background:#2563EB;opacity:0.7"></div></div>
+              <div class="bar-group"><div class="bar" style="height:70%;background:var(--orange);opacity:0.85"></div><div class="bar" style="height:30%;background:#2563EB;opacity:0.7"></div></div>
+              <div class="bar-group"><div class="bar" style="height:55%;background:var(--orange);opacity:0.85"></div><div class="bar" style="height:20%;background:#2563EB;opacity:0.7"></div></div>
+              <div class="bar-group"><div class="bar" style="height:90%;background:var(--orange)"></div><div class="bar" style="height:55%;background:#2563EB"></div></div>
+              <div class="bar-group"><div class="bar" style="height:75%;background:var(--orange);opacity:0.85"></div><div class="bar" style="height:40%;background:#2563EB;opacity:0.7"></div></div>
+              <div class="bar-group"><div class="bar" style="height:85%;background:var(--orange)"></div><div class="bar" style="height:50%;background:#2563EB"></div></div>
+              <div class="bar-group"><div class="bar" style="height:100%;background:var(--orange)"></div><div class="bar" style="height:60%;background:#2563EB"></div></div>
+              <div class="bar-group"><div class="bar" style="height:82%;background:var(--orange);opacity:0.85"></div><div class="bar" style="height:48%;background:#2563EB;opacity:0.7"></div></div>
+              <div class="bar-group"><div class="bar" style="height:68%;background:var(--orange);opacity:0.85"></div><div class="bar" style="height:35%;background:#2563EB;opacity:0.7"></div></div>
+              <div class="bar-group"><div class="bar" style="height:93%;background:var(--orange)"></div><div class="bar" style="height:62%;background:#2563EB"></div></div>
+              <div class="bar-group"><div class="bar" style="height:78%;background:var(--orange);opacity:0.85"></div><div class="bar" style="height:42%;background:#2563EB;opacity:0.7"></div></div>
+            </div>
+            <div class="bar-labels">
+              <span class="bar-label">Mar 16</span><span class="bar-label">17</span><span class="bar-label">18</span>
+              <span class="bar-label">19</span><span class="bar-label">20</span><span class="bar-label">21</span>
+              <span class="bar-label">22</span><span class="bar-label">23</span><span class="bar-label">24</span>
+              <span class="bar-label">25</span><span class="bar-label">26</span><span class="bar-label">27</span>
+              <span class="bar-label">28</span><span class="bar-label">29</span>
+            </div>
+          </div>
+
+          <!-- Donut: Policy types -->
+          <div class="chart-card">
+            <div class="chart-header">
+              <div class="chart-title">Top Policy Types</div>
+            </div>
+            <div class="donut-wrap">
+              <svg width="110" height="110" viewBox="0 0 110 110">
+                <circle cx="55" cy="55" r="40" fill="none" stroke="#DEE2E8" stroke-width="18"/>
+                <circle cx="55" cy="55" r="40" fill="none" stroke="#E07A2F" stroke-width="18" stroke-dasharray="100 151" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 55 55)"/>
+                <circle cx="55" cy="55" r="40" fill="none" stroke="#2563EB" stroke-width="18" stroke-dasharray="55 196" stroke-dashoffset="-100" stroke-linecap="round" transform="rotate(-90 55 55)"/>
+                <circle cx="55" cy="55" r="40" fill="none" stroke="#7C3AED" stroke-width="18" stroke-dasharray="35 216" stroke-dashoffset="-155" stroke-linecap="round" transform="rotate(-90 55 55)"/>
+                <circle cx="55" cy="55" r="40" fill="none" stroke="#16A34A" stroke-width="18" stroke-dasharray="25 226" stroke-dashoffset="-190" stroke-linecap="round" transform="rotate(-90 55 55)"/>
+                <text x="55" y="52" text-anchor="middle" font-size="16" font-weight="700" fill="#293040">1,847</text>
+                <text x="55" y="64" text-anchor="middle" font-size="9" fill="#737D8C">total</text>
+              </svg>
+              <div class="donut-legend">
+                <div class="dl-item"><div class="dl-swatch" style="background:#E07A2F"></div><span class="dl-label">Anti-Harassment</span><strong class="dl-val">40%</strong></div>
+                <div class="dl-item"><div class="dl-swatch" style="background:#2563EB"></div><span class="dl-label">Equal Pay</span><strong class="dl-val">22%</strong></div>
+                <div class="dl-item"><div class="dl-swatch" style="background:#7C3AED"></div><span class="dl-label">Parental Leave</span><strong class="dl-val">14%</strong></div>
+                <div class="dl-item"><div class="dl-swatch" style="background:#16A34A"></div><span class="dl-label">Flex Work</span><strong class="dl-val">10%</strong></div>
+                <div class="dl-item"><div class="dl-swatch" style="background:#DEE2E8"></div><span class="dl-label">Other</span><strong class="dl-val">14%</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom: Recent Users + Activity -->
+        <div class="two-col">
+          <!-- Recent signups -->
+          <div class="table-card">
+            <div class="table-header">
+              <div class="table-title">Recent Signups</div>
+              <button class="action-btn" onclick="showPage('users')">View All →</button>
+            </div>
+            <table>
+              <thead><tr><th>User</th><th>Plan</th><th>Credits</th><th>Joined</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><div class="avatar-row"><div class="avatar">RA</div><div class="avatar-info"><div class="avatar-name">Rania Ahmed</div><div class="avatar-email">rania@cairo-hr.com</div></div></div></td>
+                  <td><span class="tag">Starter</span></td>
+                  <td><span class="credit-pill">🔸 5</span></td>
+                  <td style="color:var(--text-muted);font-size:12px">2h ago</td>
+                </tr>
+                <tr>
+                  <td><div class="avatar-row"><div class="avatar" style="background:#DBEAFE;color:#2563EB">MH</div><div class="avatar-info"><div class="avatar-name">Mohamed Hassan</div><div class="avatar-email">m.hassan@ngo-eg.org</div></div></div></td>
+                  <td><span class="tag" style="background:#DBEAFE;color:#1D4ED8">Growth</span></td>
+                  <td><span class="credit-pill">🔸 20</span></td>
+                  <td style="color:var(--text-muted);font-size:12px">5h ago</td>
+                </tr>
+                <tr>
+                  <td><div class="avatar-row"><div class="avatar" style="background:#DCFCE7;color:#16A34A">SF</div><div class="avatar-info"><div class="avatar-name">Sara Farouk</div><div class="avatar-email">sfarouk@womenorg.net</div></div></div></td>
+                  <td><span class="tag" style="background:#DCFCE7;color:#15803D">Organisation</span></td>
+                  <td><span class="credit-pill">🔸 60</span></td>
+                  <td style="color:var(--text-muted);font-size:12px">Yesterday</td>
+                </tr>
+                <tr>
+                  <td><div class="avatar-row"><div class="avatar" style="background:#EDE9FE;color:#7C3AED">KM</div><div class="avatar-info"><div class="avatar-name">Khaled Mansour</div><div class="avatar-email">khaled@corpgov.sa</div></div></div></td>
+                  <td><span class="tag">Starter</span></td>
+                  <td><span class="credit-pill">🔸 5</span></td>
+                  <td style="color:var(--text-muted);font-size:12px">2d ago</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- Activity Feed -->
+          <div class="chart-card">
+            <div class="chart-header"><div class="chart-title">Live Activity Feed</div><span class="badge green"><span class="badge-dot pulse"></span>Live</span></div>
+            <div class="timeline">
+              <div class="tl-item"><div class="tl-dot"></div><div class="tl-body"><div class="tl-text"><strong>Rania Ahmed</strong> generated Anti-Harassment Policy Suite</div><div class="tl-time">2 min ago · 8 credits used</div></div></div>
+              <div class="tl-item"><div class="tl-dot green"></div><div class="tl-body"><div class="tl-text"><strong>New user signup:</strong> k.mansour@corpgov.sa</div><div class="tl-time">14 min ago</div></div></div>
+              <div class="tl-item"><div class="tl-dot red"></div><div class="tl-body"><div class="tl-text"><strong>Generation failed</strong> — Order #ORD-2841 (timeout)</div><div class="tl-time">32 min ago · Added to DLQ</div></div></div>
+              <div class="tl-item"><div class="tl-dot"></div><div class="tl-body"><div class="tl-text"><strong>Sara Farouk</strong> purchased 500 credits</div><div class="tl-time">1h ago · $49.00</div></div></div>
+              <div class="tl-item"><div class="tl-dot green"></div><div class="tl-body"><div class="tl-text"><strong>Mohamed Hassan</strong> downloaded Equal Pay Policy</div><div class="tl-time">2h ago</div></div></div>
+              <div class="tl-item"><div class="tl-dot gray"></div><div class="tl-body"><div class="tl-text">System backup completed successfully</div><div class="tl-time">3h ago · 02:00 UTC</div></div></div>
+              <div class="tl-item"><div class="tl-dot"></div><div class="tl-body"><div class="tl-text"><strong>Amira Tawfiq</strong> generated 3 policies (Arabic)</div><div class="tl-time">4h ago · 24 credits used</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════
+           PAGE 2: USER MANAGEMENT
+      ═══════════════════════════════════════ -->
+      <div class="page" id="page-users">
+        <div class="page-header">
+          <div>
+            <div class="page-title">User Management</div>
+            <div class="page-sub">142 registered users · 18 this month</div>
+          </div>
+          <div class="page-actions">
+            <button class="tb-btn ghost">⬇ Export CSV</button>
+            <button class="tb-btn">+ Add User</button>
+          </div>
+        </div>
+
+        <!-- Mini stats -->
+        <div class="stats-row" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px">
+          <div class="stat-card" style="--accent-color:#E07A2F;padding:12px">
+            <div class="stat-label">Active</div>
+            <div class="stat-value" style="font-size:22px">118</div>
+            <div class="stat-sub"><span class="stat-up">83%</span> of total</div>
+          </div>
+          <div class="stat-card" style="--accent-color:#2563EB;padding:12px">
+            <div class="stat-label">Trial</div>
+            <div class="stat-value" style="font-size:22px">14</div>
+            <div class="stat-sub">expiring this week: <strong>4</strong></div>
+          </div>
+          <div class="stat-card" style="--accent-color:#16A34A;padding:12px">
+            <div class="stat-label">Avg Credits</div>
+            <div class="stat-value" style="font-size:22px">184</div>
+            <div class="stat-sub">per active user</div>
+          </div>
+          <div class="stat-card" style="--accent-color:#E02424;padding:12px">
+            <div class="stat-label">Suspended</div>
+            <div class="stat-value" style="font-size:22px">3</div>
+            <div class="stat-sub" style="color:var(--red)">requires review</div>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="table-header">
+            <div class="table-title">All Users</div>
+            <div class="tbl-filter">
+              <button class="filter-chip active">All (142)</button>
+              <button class="filter-chip">Active (118)</button>
+              <button class="filter-chip">Trial (14)</button>
+              <button class="filter-chip">Suspended (3)</button>
+            </div>
+            <div class="tb-search" style="width:180px;margin-left:8px">
+              <span style="font-size:12px;color:var(--text-muted)">🔍</span>
+              <input type="text" placeholder="Search…" style="font-size:12px">
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>User</th><th>Status</th><th>Plan</th>
+                <th>Credits</th><th>Policies Generated</th><th>Last Active</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div class="avatar-row"><div class="avatar">RA</div><div class="avatar-info"><div class="avatar-name">Rania Ahmed</div><div class="avatar-email">rania@cairo-hr.com</div></div></div></td>
+                <td><span class="badge green"><span class="badge-dot pulse"></span>Active</span></td>
+                <td><span class="tag">Growth</span></td>
+                <td><span class="credit-pill">🔸 186</span></td>
+                <td>24 policies</td>
+                <td style="color:var(--text-muted);font-size:12px">2 min ago</td>
+                <td><div style="display:flex;gap:5px"><button class="action-btn">View</button><button class="action-btn primary">+ Credits</button></div></td>
+              </tr>
+              <tr>
+                <td><div class="avatar-row"><div class="avatar" style="background:#DBEAFE;color:#2563EB">MH</div><div class="avatar-info"><div class="avatar-name">Mohamed Hassan</div><div class="avatar-email">m.hassan@ngo-eg.org</div></div></div></td>
+                <td><span class="badge green">Active</span></td>
+                <td><span class="tag" style="background:#DBEAFE;color:#1D4ED8">Organisation</span></td>
+                <td><span class="credit-pill">🔸 42</span></td>
+                <td>67 policies</td>
+                <td style="color:var(--text-muted);font-size:12px">5h ago</td>
+                <td><div style="display:flex;gap:5px"><button class="action-btn">View</button><button class="action-btn primary">+ Credits</button></div></td>
+              </tr>
+              <tr>
+                <td><div class="avatar-row"><div class="avatar" style="background:#DCFCE7;color:#16A34A">SF</div><div class="avatar-info"><div class="avatar-name">Sara Farouk</div><div class="avatar-email">sfarouk@womenorg.net</div></div></div></td>
+                <td><span class="badge green">Active</span></td>
+                <td><span class="tag" style="background:#DCFCE7;color:#15803D">Organisation</span></td>
+                <td><span class="credit-pill">🔸 50</span></td>
+                <td>3 policies</td>
+                <td style="color:var(--text-muted);font-size:12px">Yesterday</td>
+                <td><div style="display:flex;gap:5px"><button class="action-btn">View</button><button class="action-btn primary">+ Credits</button></div></td>
+              </tr>
+              <tr>
+                <td><div class="avatar-row"><div class="avatar" style="background:#EDE9FE;color:#7C3AED">AT</div><div class="avatar-info"><div class="avatar-name">Amira Tawfiq</div><div class="avatar-email">a.tawfiq@hr-consult.ae</div></div></div></td>
+                <td><span class="badge yellow">Trial</span></td>
+                <td><span class="tag" style="background:#FEF3C7;color:#92400E">Trial</span></td>
+                <td><span class="credit-pill">🔸 10</span></td>
+                <td>4 policies</td>
+                <td style="color:var(--text-muted);font-size:12px">3d ago</td>
+                <td><div style="display:flex;gap:5px"><button class="action-btn">View</button><button class="action-btn primary">+ Credits</button></div></td>
+              </tr>
+              <tr>
+                <td><div class="avatar-row"><div class="avatar" style="background:#FEE2E2;color:#E02424">BK</div><div class="avatar-info"><div class="avatar-name">Basel Karim</div><div class="avatar-email">bkarim@freelance.io</div></div></div></td>
+                <td><span class="badge red">Suspended</span></td>
+                <td><span class="tag" style="background:#FEE2E2;color:#B91C1C">Blocked</span></td>
+                <td><span class="credit-pill" style="background:#FEE2E2;color:#B91C1C">🔸 0</span></td>
+                <td>1 policy</td>
+                <td style="color:var(--text-muted);font-size:12px">12d ago</td>
+                <td><div style="display:flex;gap:5px"><button class="action-btn">View</button><button class="action-btn danger">Unsuspend</button></div></td>
+              </tr>
+              <tr>
+                <td><div class="avatar-row"><div class="avatar" style="background:#DBEAFE;color:#2563EB">NA</div><div class="avatar-info"><div class="avatar-name">Nadia Abdelaziz</div><div class="avatar-email">nadia@ilo-mena.org</div></div></div></td>
+                <td><span class="badge green">Active</span></td>
+                <td><span class="tag" style="background:#DBEAFE;color:#1D4ED8">Organisation</span></td>
+                <td><span class="credit-pill">🔸 28</span></td>
+                <td>42 policies</td>
+                <td style="color:var(--text-muted);font-size:12px">Today</td>
+                <td><div style="display:flex;gap:5px"><button class="action-btn">View</button><button class="action-btn primary">+ Credits</button></div></td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="padding:12px 18px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border)">
+            <span style="font-size:12px;color:var(--text-muted)">Showing 6 of 142 users</span>
+            <div style="display:flex;gap:4px">
+              <button class="filter-chip active">1</button>
+              <button class="filter-chip">2</button>
+              <button class="filter-chip">3</button>
+              <span style="color:var(--text-muted);padding:0 4px">…</span>
+              <button class="filter-chip">24</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════
+           PAGE 3: CREDIT MANAGEMENT
+      ═══════════════════════════════════════ -->
+      <div class="page" id="page-credits">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Credit Management</div>
+            <div class="page-sub">Monitor credit balances, transactions, and purchases</div>
+          </div>
+          <div class="page-actions">
+            <button class="tb-btn ghost">⬇ Export</button>
+            <button class="tb-btn">+ Manual Credit Grant</button>
+          </div>
+        </div>
+
+        <div class="stats-row" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px">
+          <div class="stat-card" style="--accent-color:#E07A2F">
+            <div class="stat-label">Credits Sold (30d)</div>
+            <div class="stat-value">14,200</div>
+            <div class="stat-sub"><span class="stat-up">↑ 2,400</span> vs last month</div>
+          </div>
+          <div class="stat-card" style="--accent-color:#2563EB">
+            <div class="stat-label">Credits Consumed</div>
+            <div class="stat-value">11,847</div>
+            <div class="stat-sub">83.4% utilization rate</div>
+          </div>
+          <div class="stat-card" style="--accent-color:#16A34A">
+            <div class="stat-label">Credits in Wallets</div>
+            <div class="stat-value">26,153</div>
+            <div class="stat-sub">across 142 accounts</div>
+          </div>
+          <div class="stat-card" style="--accent-color:#7C3AED">
+            <div class="stat-label">Avg Credit/User</div>
+            <div class="stat-value">184</div>
+            <div class="stat-sub">median: 95 credits</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <!-- Transaction Log -->
+          <div class="table-card">
+            <div class="table-header">
+              <div class="table-title">Transaction Log</div>
+              <div class="tbl-filter">
+                <button class="filter-chip active">All</button>
+                <button class="filter-chip">Purchase</button>
+                <button class="filter-chip">Usage</button>
+                <button class="filter-chip">Grant</button>
+              </div>
+            </div>
+            <table>
+              <thead><tr><th>User</th><th>Type</th><th>Credits</th><th>Time</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><div class="avatar-row"><div class="avatar sm">RA</div><span style="font-size:13px;font-weight:600">Rania Ahmed</span></div></td>
+                  <td><span class="badge blue">Purchase</span></td>
+                  <td style="color:var(--green);font-weight:700">+200</td>
+                  <td style="color:var(--text-muted);font-size:11px">2m ago</td>
+                </tr>
+                <tr>
+                  <td><div class="avatar-row"><div class="avatar sm">RA</div><span style="font-size:13px;font-weight:600">Rania Ahmed</span></div></td>
+                  <td><span class="badge gray">Usage</span></td>
+                  <td style="color:var(--red);font-weight:700">−8</td>
+                  <td style="color:var(--text-muted);font-size:11px">2m ago</td>
+                </tr>
+                <tr>
+                  <td><div class="avatar-row"><div class="avatar sm" style="background:#DCFCE7;color:#16A34A">SF</div><span style="font-size:13px;font-weight:600">Sara Farouk</span></div></td>
+                  <td><span class="badge blue">Purchase</span></td>
+                  <td style="color:var(--green);font-weight:700">+500</td>
+                  <td style="color:var(--text-muted);font-size:11px">1h ago</td>
+                </tr>
+                <tr>
+                  <td><div class="avatar-row"><div class="avatar sm" style="background:#DBEAFE;color:#2563EB">MH</div><span style="font-size:13px;font-weight:600">Mohamed Hassan</span></div></td>
+                  <td><span class="badge gray">Usage</span></td>
+                  <td style="color:var(--red);font-weight:700">−24</td>
+                  <td style="color:var(--text-muted);font-size:11px">3h ago</td>
+                </tr>
+                <tr>
+                  <td><div class="avatar-row"><div class="avatar sm" style="background:#EDE9FE;color:#7C3AED">NA</div><span style="font-size:13px;font-weight:600">Nadia Abdelaziz</span></div></td>
+                  <td><span class="badge purple">Grant</span></td>
+                  <td style="color:var(--green);font-weight:700">+50</td>
+                  <td style="color:var(--text-muted);font-size:11px">5h ago</td>
+                </tr>
+                <tr>
+                  <td><div class="avatar-row"><div class="avatar sm">KM</div><span style="font-size:13px;font-weight:600">Khaled Mansour</span></div></td>
+                  <td><span class="badge blue">Purchase</span></td>
+                  <td style="color:var(--green);font-weight:700">+50</td>
+                  <td style="color:var(--text-muted);font-size:11px">Yesterday</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Credit bundles + top users -->
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div class="chart-card">
+              <div class="chart-header"><div class="chart-title">Bundle Sales (30d)</div></div>
+              <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+                    <span>Starter Pack (5 cr — $49)</span><strong>84 sold</strong>
+                  </div>
+                  <div class="progress-wrap"><div class="progress-bar" style="width:55%;background:var(--orange)"></div></div>
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+                    <span>Growth Pack (20 cr — $149)</span><strong>52 sold</strong>
+                  </div>
+                  <div class="progress-wrap"><div class="progress-bar" style="width:75%;background:#2563EB"></div></div>
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+                    <span>Organisation Pack (60 cr — $349)</span><strong>28 sold</strong>
+                  </div>
+                  <div class="progress-wrap"><div class="progress-bar" style="width:90%;background:#7C3AED"></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="chart-card" style="padding:14px">
+              <div class="chart-title" style="margin-bottom:10px">Top Credit Holders</div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <div style="display:flex;align-items:center;gap:8px;font-size:12px">
+                  <span style="color:var(--text-muted);width:16px">1</span>
+                  <div class="avatar sm" style="background:#DCFCE7;color:#16A34A">SF</div>
+                  <span style="flex:1;font-weight:600">Sara Farouk</span>
+                  <span class="credit-pill" style="font-size:11px">🔸 500</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;font-size:12px">
+                  <span style="color:var(--text-muted);width:16px">2</span>
+                  <div class="avatar sm" style="background:#DBEAFE;color:#2563EB">MH</div>
+                  <span style="flex:1;font-weight:600">Mohamed Hassan</span>
+                  <span class="credit-pill" style="font-size:11px">🔸 412</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;font-size:12px">
+                  <span style="color:var(--text-muted);width:16px">3</span>
+                  <div class="avatar sm" style="background:#EDE9FE;color:#7C3AED">NA</div>
+                  <span style="flex:1;font-weight:600">Nadia Abdelaziz</span>
+                  <span class="credit-pill" style="font-size:11px">🔸 280</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════
+           PAGE 4: ORDER VIEWER
+      ═══════════════════════════════════════ -->
+      <div class="page" id="page-orders">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Order Viewer</div>
+            <div class="page-sub">284 orders this month · 8 generating now</div>
+          </div>
+          <div class="page-actions">
+            <button class="tb-btn ghost">📅 Filter</button>
+            <button class="tb-btn ghost">⬇ Export</button>
+          </div>
+        </div>
+
+        <div class="stats-row" style="grid-template-columns:repeat(5,1fr);margin-bottom:16px">
+          <div class="stat-card" style="--accent-color:#16A34A;padding:12px">
+            <div class="stat-label">Complete</div>
+            <div class="stat-value" style="font-size:20px;color:var(--green)">268</div>
+          </div>
+          <div class="stat-card" style="--accent-color:#2563EB;padding:12px">
+            <div class="stat-label">Generating</div>
+            <div class="stat-value" style="font-size:20px;color:var(--blue)">8</div>
+          </div>
+          <div class="stat-card" style="--accent-color:#D97706;padding:12px">
+            <div class="stat-label">Pending</div>
+            <div class="stat-value" style="font-size:20px;color:var(--yellow)">3</div>
+          </div>
+          <div class="stat-card" style="--accent-color:#E02424;padding:12px">
+            <div class="stat-label">Failed</div>
+            <div class="stat-value" style="font-size:20px;color:var(--red)">5</div>
+          </div>
+          <div class="stat-card" style="--accent-color:#E07A2F;padding:12px">
+            <div class="stat-label">Avg Gen Time</div>
+            <div class="stat-value" style="font-size:20px">2m 14s</div>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="table-header">
+            <div class="table-title">All Orders</div>
+            <div class="tbl-filter">
+              <button class="filter-chip active">All (284)</button>
+              <button class="filter-chip">Complete</button>
+              <button class="filter-chip">Generating</button>
+              <button class="filter-chip">Pending</button>
+              <button class="filter-chip">Failed</button>
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr><th>Order ID</th><th>User</th><th>Policies</th><th>Language</th><th>Status</th><th>Credits</th><th>Duration</th><th>Created</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="font-family:monospace;font-size:12px;color:var(--orange)">#ORD-2849</td>
+                <td><div class="avatar-row"><div class="avatar sm">RA</div>Rania Ahmed</div></td>
+                <td>8 policies</td>
+                <td><span class="badge gray">EN + AR</span></td>
+                <td><span class="badge blue"><span class="badge-dot pulse"></span>Generating</span></td>
+                <td style="font-weight:600">64 cr</td>
+                <td>1m 22s…</td>
+                <td style="font-size:11px;color:var(--text-muted)">Just now</td>
+                <td><button class="action-btn">View Log</button></td>
+              </tr>
+              <tr>
+                <td style="font-family:monospace;font-size:12px;color:var(--orange)">#ORD-2848</td>
+                <td><div class="avatar-row"><div class="avatar sm" style="background:#DBEAFE;color:#2563EB">MH</div>M. Hassan</div></td>
+                <td>4 policies</td>
+                <td><span class="badge gray">AR</span></td>
+                <td><span class="badge green">Complete</span></td>
+                <td style="font-weight:600">32 cr</td>
+                <td>1m 58s</td>
+                <td style="font-size:11px;color:var(--text-muted)">14m ago</td>
+                <td><button class="action-btn">View</button></td>
+              </tr>
+              <tr style="background:#FEF2F2">
+                <td style="font-family:monospace;font-size:12px;color:var(--red)">#ORD-2841</td>
+                <td><div class="avatar-row"><div class="avatar sm" style="background:#FEE2E2;color:#E02424">AT</div>A. Tawfiq</div></td>
+                <td>2 policies</td>
+                <td><span class="badge gray">EN</span></td>
+                <td><span class="badge red">Failed</span></td>
+                <td style="font-weight:600;color:var(--text-muted)">0 cr</td>
+                <td>—</td>
+                <td style="font-size:11px;color:var(--text-muted)">32m ago</td>
+                <td><div style="display:flex;gap:5px"><button class="action-btn">View Log</button><button class="action-btn primary">Retry</button></div></td>
+              </tr>
+              <tr>
+                <td style="font-family:monospace;font-size:12px;color:var(--orange)">#ORD-2840</td>
+                <td><div class="avatar-row"><div class="avatar sm" style="background:#DCFCE7;color:#16A34A">SF</div>Sara Farouk</div></td>
+                <td>3 policies</td>
+                <td><span class="badge gray">EN</span></td>
+                <td><span class="badge green">Complete</span></td>
+                <td style="font-weight:600">24 cr</td>
+                <td>2m 11s</td>
+                <td style="font-size:11px;color:var(--text-muted)">1h ago</td>
+                <td><button class="action-btn">View</button></td>
+              </tr>
+              <tr>
+                <td style="font-family:monospace;font-size:12px;color:var(--orange)">#ORD-2835</td>
+                <td><div class="avatar-row"><div class="avatar sm" style="background:#EDE9FE;color:#7C3AED">NA</div>N. Abdelaziz</div></td>
+                <td>6 policies</td>
+                <td><span class="badge gray">EN + AR</span></td>
+                <td><span class="badge green">Complete</span></td>
+                <td style="font-weight:600">48 cr</td>
+                <td>3m 02s</td>
+                <td style="font-size:11px;color:var(--text-muted)">3h ago</td>
+                <td><button class="action-btn">View</button></td>
+              </tr>
+              <tr>
+                <td style="font-family:monospace;font-size:12px;color:var(--text-muted)">#ORD-2830</td>
+                <td><div class="avatar-row"><div class="avatar sm">KM</div>K. Mansour</div></td>
+                <td>1 policy</td>
+                <td><span class="badge gray">AR</span></td>
+                <td><span class="badge yellow">Pending</span></td>
+                <td style="font-weight:600">8 cr</td>
+                <td>—</td>
+                <td style="font-size:11px;color:var(--text-muted)">5h ago</td>
+                <td><button class="action-btn">View</button></td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="padding:12px 18px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border)">
+            <span style="font-size:12px;color:var(--text-muted)">Showing 6 of 284 orders</span>
+            <div style="display:flex;gap:4px">
+              <button class="filter-chip active">1</button>
+              <button class="filter-chip">2</button>
+              <button class="filter-chip">3</button>
+              <span style="color:var(--text-muted);padding:0 4px">…</span>
+              <button class="filter-chip">48</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════
+           PAGE 5: ERROR DASHBOARD / DLQ
+      ═══════════════════════════════════════ -->
+      <div class="page" id="page-errors">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Error Queue (DLQ)</div>
+            <div class="page-sub">5 items requiring attention · 3 added today</div>
+          </div>
+          <div class="page-actions">
+            <button class="tb-btn ghost" style="color:var(--red);border-color:var(--red)">🗑 Clear Resolved</button>
+            <button class="tb-btn">↩ Retry All</button>
+          </div>
+        </div>
+
+        <!-- Error Stats -->
+        <div class="stats-row" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px">
+          <div class="stat-card" style="--accent-color:#E02424;padding:12px">
+            <div class="stat-label">DLQ Items</div>
+            <div class="stat-value" style="font-size:22px;color:var(--red)">5</div>
+            <div class="stat-sub"><span class="stat-down">+3</span> today</div>
+          </div>
+          <div class="stat-card" style="--accent-color:#D97706;padding:12px">
+            <div class="stat-label">Error Rate</div>
+            <div class="stat-value" style="font-size:22px">1.8%</div>
+            <div class="stat-sub">5 of 284 orders</div>
+          </div>
+          <div class="stat-card" style="--accent-color:#16A34A;padding:12px">
+            <div class="stat-label">Auto-Retried</div>
+            <div class="stat-value" style="font-size:22px;color:var(--green)">12</div>
+            <div class="stat-sub">71% success on retry</div>
+          </div>
+          <div class="stat-card" style="--accent-color:#2563EB;padding:12px">
+            <div class="stat-label">Avg Resolution</div>
+            <div class="stat-value" style="font-size:22px">4.2m</div>
+            <div class="stat-sub">after manual retry</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <!-- DLQ Items -->
+          <div class="table-card">
+            <div class="table-header">
+              <div class="table-title">Dead Letter Queue</div>
+              <div class="tbl-filter">
+                <button class="filter-chip active">All (5)</button>
+                <button class="filter-chip">Timeout</button>
+                <button class="filter-chip">API Error</button>
+                <button class="filter-chip">Validation</button>
+              </div>
+            </div>
+            <div>
+              <div class="error-item">
+                <div class="error-icon">⏱</div>
+                <div class="error-body">
+                  <div class="error-title">Generation Timeout — #ORD-2841</div>
+                  <div class="error-meta">
+                    <span>User: Amira Tawfiq</span>
+                    <span>Policies: 2</span>
+                    <code>TIMEOUT_60s</code>
+                    <span style="color:var(--text-muted)">32m ago</span>
+                  </div>
+                  <div style="margin-top:6px;font-size:11px;background:#FEF2F2;border:1px solid #FECACA;border-radius:6px;padding:6px 9px;font-family:monospace;color:#991B1B">
+                    Error: n8n workflow execution exceeded 60s timeout at node "Clause Generator"
+                  </div>
+                </div>
+                <div class="error-actions">
+                  <button class="action-btn primary">↩ Retry</button>
+                  <button class="action-btn">Skip</button>
+                </div>
+              </div>
+              <div class="error-item">
+                <div class="error-icon">🔌</div>
+                <div class="error-body">
+                  <div class="error-title">Claude API Rate Limit — #ORD-2837</div>
+                  <div class="error-meta">
+                    <span>User: Nadia Abdelaziz</span>
+                    <code>HTTP_429</code>
+                    <span style="color:var(--text-muted)">1h 14m ago</span>
+                  </div>
+                  <div style="margin-top:6px;font-size:11px;background:#FEF2F2;border:1px solid #FECACA;border-radius:6px;padding:6px 9px;font-family:monospace;color:#991B1B">
+                    Error: Anthropic API returned 429 Too Many Requests — retry after 60s
+                  </div>
+                </div>
+                <div class="error-actions">
+                  <button class="action-btn primary">↩ Retry</button>
+                  <button class="action-btn">Skip</button>
+                </div>
+              </div>
+              <div class="error-item">
+                <div class="error-icon warn">⚠️</div>
+                <div class="error-body">
+                  <div class="error-title">docxtemplater Validation Error — #ORD-2829</div>
+                  <div class="error-meta">
+                    <span>User: Mohamed Hassan</span>
+                    <code>TEMPLATE_VAR_MISSING</code>
+                    <span style="color:var(--text-muted)">3h ago</span>
+                  </div>
+                  <div style="margin-top:6px;font-size:11px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;padding:6px 9px;font-family:monospace;color:#92400E">
+                    Warning: Template variable {{org_sector}} not found in Equal Pay policy template
+                  </div>
+                </div>
+                <div class="error-actions">
+                  <button class="action-btn primary">↩ Retry</button>
+                  <button class="action-btn danger">Inspect</button>
+                </div>
+              </div>
+              <div class="error-item">
+                <div class="error-icon">⏱</div>
+                <div class="error-body">
+                  <div class="error-title">Generation Timeout — #ORD-2821</div>
+                  <div class="error-meta">
+                    <span>User: Rania Ahmed</span>
+                    <span>Policies: 6</span>
+                    <code>TIMEOUT_60s</code>
+                    <span style="color:var(--text-muted)">6h ago</span>
+                  </div>
+                </div>
+                <div class="error-actions">
+                  <button class="action-btn primary">↩ Retry</button>
+                  <button class="action-btn">Skip</button>
+                </div>
+              </div>
+              <div class="error-item" style="border-bottom:none">
+                <div class="error-icon warn">📧</div>
+                <div class="error-body">
+                  <div class="error-title">Email Delivery Failure — #ORD-2818</div>
+                  <div class="error-meta">
+                    <span>User: Basel Karim</span>
+                    <code>SMTP_BOUNCE</code>
+                    <span style="color:var(--text-muted)">8h ago</span>
+                  </div>
+                </div>
+                <div class="error-actions">
+                  <button class="action-btn">Resend</button>
+                  <button class="action-btn danger">Dismiss</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Error Rate Chart + Recent Logs -->
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div class="chart-card">
+              <div class="chart-header"><div class="chart-title">Error Rate (14d)</div></div>
+              <div class="bar-chart" style="height:80px">
+                <div class="bar-group"><div class="bar" style="height:20%;background:var(--red);opacity:0.7"></div></div>
+                <div class="bar-group"><div class="bar" style="height:10%;background:var(--red);opacity:0.7"></div></div>
+                <div class="bar-group"><div class="bar" style="height:30%;background:var(--red);opacity:0.7"></div></div>
+                <div class="bar-group"><div class="bar" style="height:15%;background:var(--red);opacity:0.7"></div></div>
+                <div class="bar-group"><div class="bar" style="height:5%;background:var(--red);opacity:0.7"></div></div>
+                <div class="bar-group"><div class="bar" style="height:25%;background:var(--red);opacity:0.7"></div></div>
+                <div class="bar-group"><div class="bar" style="height:10%;background:var(--red);opacity:0.7"></div></div>
+                <div class="bar-group"><div class="bar" style="height:40%;background:var(--red);opacity:0.7"></div></div>
+                <div class="bar-group"><div class="bar" style="height:20%;background:var(--red);opacity:0.7"></div></div>
+                <div class="bar-group"><div class="bar" style="height:15%;background:var(--red);opacity:0.7"></div></div>
+                <div class="bar-group"><div class="bar" style="height:5%;background:var(--red);opacity:0.7"></div></div>
+                <div class="bar-group"><div class="bar" style="height:35%;background:var(--red);opacity:0.7"></div></div>
+                <div class="bar-group"><div class="bar" style="height:20%;background:var(--red);opacity:0.7"></div></div>
+                <div class="bar-group"><div class="bar" style="height:100%;background:var(--red)"></div></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-top:5px;font-size:10px;color:var(--text-muted)">
+                <span>Mar 16</span><span>22</span><span>Mar 29</span>
+              </div>
+            </div>
+            <div class="chart-card" style="padding:14px">
+              <div class="chart-title" style="margin-bottom:10px">Error Type Breakdown</div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">
+                    <span>Timeout (n8n)</span><strong>2</strong>
+                  </div>
+                  <div class="progress-wrap"><div class="progress-bar" style="width:40%;background:var(--red)"></div></div>
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">
+                    <span>API Rate Limit</span><strong>1</strong>
+                  </div>
+                  <div class="progress-wrap"><div class="progress-bar" style="width:20%;background:var(--yellow)"></div></div>
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">
+                    <span>Template Validation</span><strong>1</strong>
+                  </div>
+                  <div class="progress-wrap"><div class="progress-bar" style="width:20%;background:var(--blue)"></div></div>
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">
+                    <span>Email Delivery</span><strong>1</strong>
+                  </div>
+                  <div class="progress-wrap"><div class="progress-bar" style="width:20%;background:var(--purple)"></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="chart-card" style="padding:14px;flex:1">
+              <div class="chart-title" style="margin-bottom:10px">System Health</div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px">
+                  <span>n8n Workers</span><span class="badge green">Healthy</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px">
+                  <span>Claude API</span><span class="badge green">Healthy</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px">
+                  <span>PostgreSQL VPS</span><span class="badge green">Healthy</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px">
+                  <span>Object Storage</span><span class="badge yellow">Degraded (NBG1)</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px">
+                  <span>Hetzner VPS</span><span class="badge green">Online</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /shell -->
+
+<script>
+function showPage(name) {
+  // Pages
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+
+  // Variant bar buttons
+  document.querySelectorAll('.vbtn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+
+  // Sidebar items
+  document.querySelectorAll('.sb-item').forEach(b => b.classList.remove('active'));
+  const sbEl = document.getElementById('sb-' + name);
+  if (sbEl) sbEl.classList.add('active');
+
+  // Breadcrumb + topbar
+  const labels = {
+    overview: 'Dashboard', users: 'Users', credits: 'Credits',
+    orders: 'Orders', errors: 'Error Queue'
+  };
+  document.getElementById('breadcrumb').innerHTML = 'Admin / <strong>' + (labels[name] || name) + '</strong>';
+}
+
+// Filter chips — toggle active (cosmetic)
+document.querySelectorAll('.filter-chip').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const group = this.closest('.tbl-filter, .table-header');
+    if (group) {
+      group.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    }
+  });
+});
+</script>
+</body>
+</html>
